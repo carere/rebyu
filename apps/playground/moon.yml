@@ -1,0 +1,30 @@
+$schema: ../../.moon/cache/schemas/project.json
+id: playground
+language: typescript
+stack: frontend
+tasks:
+  dev:
+    command: vite --host 0.0.0.0
+    deps:
+      - vite-plugin-rebyu:build
+    preset: server
+  build:
+    command: vite build
+    deps:
+      - vite-plugin-rebyu:build
+    inputs:
+      - src/**/*
+      - index.html
+      - vite.config.ts
+    outputs:
+      - dist
+  preview:
+    command: vite preview --host 0.0.0.0
+    deps:
+      - ~:build
+    preset: server
+  seed:
+    command: bun scripts/seed.ts
+    preset: utility
+    options:
+      cache: false

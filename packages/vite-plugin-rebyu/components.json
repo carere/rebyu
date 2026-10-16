@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "kobalte",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/client/styles.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "./src/client/components",
+    "ui": "./src/client/components/ui",
+    "utils": "./src/client/lib/utils"
+  },
+  "registries": { "@zaidan": "https://zaidan.carere.dev/r/{style}/{name}.json" }
+}

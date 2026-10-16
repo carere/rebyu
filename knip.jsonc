@@ -1,0 +1,29 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "includeEntryExports": true,
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/check-pr-body.ts"],
+      "project": ["scripts/**/*.ts"]
+    },
+    "apps/playground": {
+      "entry": ["scripts/seed.ts"],
+      "project": ["src/**/*.ts", "*.ts", "scripts/**/*.ts"],
+      "includeEntryExports": false
+    },
+    "packages/vite-plugin-rebyu": {
+      "entry": [
+        "src/index.ts",
+        "src/client/index.tsx",
+        "vite.client.config.ts",
+        "tests/**/*.test.ts"
+      ],
+      "project": ["src/**/*.{ts,tsx,css}", "tests/**/*.ts", "*.ts"],
+      // Preserve the published API and the vendored Zaidan primitive API.
+      "includeEntryExports": false,
+      // Knip does not discover CLI commands in project-level Moon files.
+      "ignoreDependencies": ["tsup"],
+      "ignore": ["src/client/components/ui/*.tsx"]
+    }
+  }
+}

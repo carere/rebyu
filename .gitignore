@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.rebyu/
+*.tsbuildinfo
+.DS_Store
+.moon/cache/
+.moon/docker/
+.moon/workspaceState.json
+coverage/
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+*.tgz

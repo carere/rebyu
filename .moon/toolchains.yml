@@ -1,0 +1,11 @@
+$schema: ./cache/schemas/toolchains.json
+javascript:
+  packageManager: bun
+  dependencyVersionFormat: workspace
+  inferTasksFromScripts: false
+  syncProjectWorkspaceDependencies: true
+proto:
+  version: "0.62.3"
+# Inherit pinned runtime versions from .prototools.
+bun: {}
+node: {}

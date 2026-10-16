@@ -1,0 +1,35 @@
+$schema: ../../.moon/cache/schemas/project.json
+id: vite-plugin-rebyu
+language: typescript
+stack: frontend
+tasks:
+  build-client:
+    command: vite build --config vite.client.config.ts
+    inputs:
+      - src/client/**/*
+      - src/constants.ts
+      - src/schema.ts
+      - vite.client.config.ts
+    outputs:
+      - dist/client
+  build:
+    command: tsup src/index.ts --format esm --dts --external vite --out-dir dist
+    deps:
+      - ~:build-client
+    inputs:
+      - src/**/*
+      - vite.client.config.ts
+      - /tsconfig.json
+    outputs:
+      - dist/index.js
+      - dist/index.d.ts
+  test-unit:
+    command: vitest run tests/unit
+    options:
+      cache: false
+  test-integration:
+    command: vitest run tests/integration
+    deps:
+      - ~:build
+    options:
+      cache: false

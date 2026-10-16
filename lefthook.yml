@@ -1,0 +1,17 @@
+commit-msg:
+  commands:
+    conventional-commit:
+      run: cog verify --file "{1}"
+
+pre-commit:
+  commands:
+    sort-package-json:
+      priority: 1
+      glob: "{package.json,**/package.json}"
+      run: bun sort-package-json {staged_files}
+      stage_fixed: true
+    check:
+      priority: 2
+      glob: "*.{js,jsx,ts,tsx,json,jsonc,html,css}"
+      run: bun biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
