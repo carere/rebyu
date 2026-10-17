@@ -14,7 +14,8 @@ jobs:
     name: All checks passed
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v7.0.1
+      - name: Check out repository and full history
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
       - name: Install and cache the pinned toolchain
@@ -22,16 +23,30 @@ jobs:
         with:
           auto-install: true
           cache-base: main
-      - uses: actions/cache@v6.1.0
+      - name: Restore Bun package download cache
+        uses: actions/cache@v6.1.0
         with:
           path: ~/.bun/install/cache
           key: ${{ runner.os }}-${{ runner.arch }}-bun-${{ hashFiles('.prototools', 'bun.lock') }}
           restore-keys: ${{ runner.os }}-${{ runner.arch }}-bun-
-      - run: bun install --frozen-lockfile
-      - run: bun sort-package-json --check package.json 'apps/*/package.json' 'packages/*/package.json'
-      - run: bun biome check . --error-on-warnings
-      - run: moon run vite-plugin-rebyu:build playground:build
-      - run: bun tsc --noEmit
-      - run: bun knip
-      - run: moon run vite-plugin-rebyu:test-unit vite-plugin-rebyu:test-integration
-      - run: git diff --exit-code
+      - name: Install dependencies from the lockfile
+        run: bun install --frozen-lockfile
+      - name: Check package manifest sorting
+        run: bun sort-package-json --check package.json 'apps/*/package.json' 'packages/*/package.json'
+      - name: Check formatting, lint rules, and imports
+        run: bun biome check . --error-on-warnings
+      - name: Build the Vite plugin and playground
+        run: moon run vite-plugin-rebyu:build playground:build
+      - name: Check TypeScript types
+        run: bun tsc --noEmit
+      - name: Check unused code and dependencies
+        run: bun knip
+      - name: Run unit and integration tests
+        run: moon run vite-plugin-rebyu:test-unit vite-plugin-rebyu:test-integration
+      - name: Install Chromium and browser test system dependencies
+        working-directory: packages/vite-plugin-rebyu
+        run: bunx --bun playwright install --with-deps chromium
+      - name: Run widget browser regression tests
+        run: moon run vite-plugin-rebyu:test-browser
+      - name: Verify checks left tracked files unchanged
+        run: git diff --exit-code

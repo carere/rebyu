@@ -27,6 +27,7 @@ export const createSchema = z.object({
   page: z.string().startsWith("/").max(2000),
   message: z.string().trim().min(1).max(10000),
   author,
+  authorId: z.string().trim().min(1).max(200).optional(),
   category: z.enum(categories),
   anchor: anchorSchema,
   screenshot: z
@@ -43,6 +44,7 @@ export const createSchema = z.object({
 const replySchema = z.object({
   id: z.uuid(),
   author,
+  authorId: z.string().trim().min(1).max(200).optional(),
   message: z.string().trim().min(1).max(10000),
 });
 export const patchSchema = z

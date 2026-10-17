@@ -12,24 +12,27 @@ jobs:
     name: Pull request metadata
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v7.0.1
+      - name: Check out pull request code and full history
+        uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - name: Check Conventional Commits
+      - name: Check pull request commit messages
         uses: cocogitto/cocogitto-action@v4.1.0
         with:
           command: check
           args: --ignore-merge-commits ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
-      - name: Check the PR title
+      - name: Check pull request title format
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: cog verify "$PR_TITLE"
-      - uses: moonrepo/setup-toolchain@261c62cb5b0f580c7be7c8cd0f023a2e96756095 # v0.6.4
+      - name: Set up proto and restore the toolchain cache
+        uses: moonrepo/setup-toolchain@261c62cb5b0f580c7be7c8cd0f023a2e96756095 # v0.6.4
         with:
           cache-base: main
-      - run: proto install bun
-      - name: Check the PR body against the installed skill
+      - name: Install the pinned Bun runtime
+        run: proto install bun
+      - name: Validate pull request body against the PR template
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: bun scripts/check-pr-body.ts

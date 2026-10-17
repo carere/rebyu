@@ -8,7 +8,7 @@ Baseline researched on 2026-10-16 from [SitePing](https://siteping.dev/), its [r
 - Zaidan Button and a non-modal right-side Drawer, with portals inside the widget's ShadowRoot.
 - Element picking, rectangle drawing, freehand drawing, numbered DOM pins, and annotation highlighting.
 - CSS selector, XPath, and text fallback anchoring. Relative coordinates for drawn annotations; scroll, resize, DOM mutation, and body resize tracking.
-- Cross-page review inbox with All pages / This page scope, page-path search, author filter, categories, replies, four statuses, and filtered JSON export. Selecting a review navigates to its page and reopens the conversation.
+- Cross-page review inbox with All pages / This page scope, page-path search, author filter, categories, replies, and four statuses. Selecting a review navigates to its page and reopens the conversation.
 - File-backed shared comments; atomic writes, validation, serialized mutations, retry-safe creation and replies, durable new-comment outbox.
 - Opt-in viewport screenshots excluding form controls and ignored subtrees. Optional uncaught error / rejected promise diagnostics.
 - Light/dark themes, responsive drawer, accessible names, keyboard element selection, inbox navigation shortcuts, and reduced-motion styles.

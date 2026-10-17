@@ -37,5 +37,11 @@ root.innerHTML = page.html;
 document.title = page.title;
 document.querySelector("#try-review")?.addEventListener("click", () => {
   const widget = document.getElementById("rebyu-widget")?.shadowRoot;
-  (widget?.querySelector('[aria-label="Select an element"]') as HTMLButtonElement)?.click();
+  (widget?.querySelector('[aria-label="Open review tools"]') as HTMLButtonElement)?.click();
+  requestAnimationFrame(() => {
+    (widget?.querySelector('[aria-label="Annotation tools"]') as HTMLButtonElement)?.click();
+    requestAnimationFrame(() => {
+      (widget?.querySelector('[aria-label="Select an element"]') as HTMLButtonElement)?.click();
+    });
+  });
 });

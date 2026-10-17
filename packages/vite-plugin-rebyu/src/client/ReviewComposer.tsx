@@ -1,10 +1,25 @@
 import { ArrowLeft, ArrowUpRight } from "lucide-solid";
-import { For, Show } from "solid-js";
+import { Show } from "solid-js";
+import { m } from "#i18n/messages";
 import { categories } from "../constants";
 import type { ReviewModel } from "./App";
 import { Button } from "./components/ui/button";
+import { Checkbox } from "./components/ui/checkbox";
+import { Input } from "./components/ui/input";
+import { Label } from "./components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./components/ui/select";
+import { Textarea } from "./components/ui/textarea";
+import { categoryLabel } from "./view-utils";
 export function ReviewComposer(input: { model: ReviewModel }) {
   const {
+    props,
     draft,
     setDraft,
     message,
@@ -23,84 +38,79 @@ export function ReviewComposer(input: { model: ReviewModel }) {
     <Show when={draft()}>
       {(anchor) => (
         <div class="detail-scroll">
-          <button type="button" class="back-button" onClick={() => setDraft()}>
-            <ArrowLeft size={15} /> All comments
-          </button>
-          <p class="eyebrow">YOUR PERSPECTIVE MATTERS</p>
-          <h2>What caught your eye?</h2>
-          <p class="muted">A little context makes a big difference.</p>
-          <div class="anchor-label">
-            <span class="live-dot" />
-            {anchor().kind === "element"
-              ? `<${anchor().tag}> element selected`
-              : anchor().kind === "draw"
-                ? "Freehand annotation"
-                : "Area selected"}
-            <button
-              type="button"
-              onClick={() =>
-                start(
-                  anchor().kind === "element"
-                    ? "element"
-                    : anchor().kind === "draw"
-                      ? "draw"
-                      : "rectangle",
-                )
-              }
-            >
-              Reselect
-            </button>
-          </div>
+          <Button variant="outline" type="button" class="back-button" onClick={() => setDraft()}>
+            <ArrowLeft size={15} /> {m.review_all_comments()}
+          </Button>
+          <h2>{m.review_composer_title()}</h2>
           <form onSubmit={submit}>
-            <label>
-              Your name
-              <input
+            <Label class="form-field">
+              {m.review_your_name()}
+              <Input
                 required
                 maxLength={80}
-                placeholder="e.g. Alex Morgan"
+                placeholder={m.review_name_placeholder()}
                 value={author()}
                 onInput={(e) => setAuthor(e.currentTarget.value)}
               />
-            </label>
-            <label>
-              Comment
-              <textarea
+            </Label>
+            <Label class="form-field">
+              {m.review_comment()}
+              <Textarea
                 autofocus
                 required
                 maxLength={10000}
                 rows={5}
-                placeholder="What could we improve here?"
+                placeholder={m.review_comment_placeholder()}
                 value={message()}
                 onInput={(e) => setMessage(e.currentTarget.value)}
               />
-            </label>
-            <label>
-              Category
-              <select
-                value={category()}
-                onChange={(e) => setCategory(e.currentTarget.value as (typeof categories)[number])}
+            </Label>
+            <Select
+              class="review-select"
+              options={[...categories]}
+              value={category()}
+              onChange={(value) => {
+                if (value) setCategory(value);
+              }}
+              itemComponent={(item) => (
+                <SelectItem item={item.item}>{categoryLabel(item.item.rawValue)}</SelectItem>
+              )}
+              modal={false}
+            >
+              <SelectLabel>{m.review_category()}</SelectLabel>
+              <SelectTrigger>
+                <SelectValue<(typeof categories)[number]>>
+                  {(state) => categoryLabel(state.selectedOption())}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent portalMount={props.portalMount} />
+            </Select>
+            <div class="checkbox-row">
+              <Checkbox id="rebyu-capture" checked={capture()} onChange={setCapture} />
+              <Label for="rebyu-capture">{m.review_attach_screenshot()}</Label>
+            </div>
+            <div class="composer-actions">
+              <Button type="submit" disabled={busy()}>
+                {busy() ? m.review_saving() : m.review_post_comment()}
+                <ArrowUpRight size={16} />
+              </Button>
+              <Button
+                variant="outline"
+                type="button"
+                disabled={busy()}
+                onClick={() =>
+                  start(
+                    anchor().kind === "element"
+                      ? "element"
+                      : anchor().kind === "draw"
+                        ? "draw"
+                        : "rectangle",
+                  )
+                }
               >
-                <For each={categories}>
-                  {(c) => <option value={c}>{c[0].toUpperCase() + c.slice(1)}</option>}
-                </For>
-              </select>
-            </label>
-            <label class="checkbox-row">
-              <input
-                type="checkbox"
-                checked={capture()}
-                onChange={(e) => setCapture(e.currentTarget.checked)}
-              />{" "}
-              Attach a screenshot of this viewport
-            </label>
-            <p class="small muted">
-              Inputs and elements marked data-rebyu-ignore are excluded. Check the page for
-              sensitive text before attaching.
-            </p>
-            <Button type="submit" disabled={busy()} class="submit-button">
-              {busy() ? "Saving…" : "Post comment"}
-              <ArrowUpRight size={16} />
-            </Button>
+                {m.review_reselect()}
+              </Button>
+            </div>
           </form>
         </div>
       )}

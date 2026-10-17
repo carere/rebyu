@@ -13,3 +13,6 @@ test-results/
 .env.*
 !.env.example
 *.tgz
+packages/*/src/i18n/
+apps/*/src/i18n/
+project.inlang/cache/

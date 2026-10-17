@@ -83,3 +83,19 @@ describe("durable reviews", () => {
     expect(await store.list()).toHaveLength(1);
   });
 });
+
+describe("Given identified reviewers in persistent storage", () => {
+  it("Then user IDs survive reopening the store alongside legacy records", async () => {
+    const { store, file } = await setup();
+    const review = await store.create({ ...fixture(), authorId: "kevin" });
+    await store.create(fixture());
+    await store.update(review.id, {
+      reply: { id: crypto.randomUUID(), author: "Alice", authorId: "alice", message: "Updated" },
+    });
+    const saved = await new ReviewStore(file).list();
+    const identified = saved.find((item) => item.id === review.id);
+    expect(identified?.authorId).toBe("kevin");
+    expect(identified?.replies[0].authorId).toBe("alice");
+    expect(saved.find((item) => item.id !== review.id)?.authorId).toBeUndefined();
+  });
+});

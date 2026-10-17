@@ -1,3 +1,4 @@
+import { m } from "#i18n/messages";
 import type { ClientConfig, NewReview, Review } from "../schema";
 export function createApi(config: ClientConfig) {
   const key = `rebyu:outbox:${config.projectId}`;
@@ -17,10 +18,24 @@ export function createApi(config: ClientConfig) {
       headers: { "Content-Type": "application/json" },
       body: data === undefined ? undefined : JSON.stringify(data),
       signal: AbortSignal.timeout(15000),
+    }).catch(() => {
+      throw new Error(m.review_connection_error());
     });
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.error ?? `Request failed (${response.status})`);
+      const knownErrors: Record<string, () => string> = {
+        "Review not found": m.review_error_not_found,
+        "Not found": m.review_error_not_found,
+        "Invalid review data": m.review_error_invalid_data,
+        "Cross-origin requests are not allowed": m.review_error_cross_origin,
+        "Method not allowed": m.review_error_method,
+        "Could not save reviews. Check the Vite server log.": m.review_error_server,
+      };
+      throw new Error(
+        knownErrors[error.error]?.() ??
+          error.error ??
+          m.review_request_failed({ status: response.status }),
+      );
     }
     return response.json();
   }

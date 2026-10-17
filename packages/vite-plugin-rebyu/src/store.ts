@@ -11,6 +11,7 @@ const storedSchema = createSchema.extend({
     z.object({
       id: z.uuid(),
       author: z.string(),
+      authorId: z.string().trim().min(1).max(200).optional(),
       message: z.string(),
       createdAt: z.iso.datetime(),
     }),

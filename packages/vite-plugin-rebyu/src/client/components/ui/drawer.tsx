@@ -18,8 +18,8 @@ import {
   useContext,
 } from "@corvu/drawer";
 import type { ComponentProps, ValidComponent } from "solid-js";
-import { splitProps } from "solid-js";
-import { cn } from "../../lib/utils";
+import { Show, splitProps } from "solid-js";
+import { cn } from "#utils";
 
 type DrawerRootProps<T extends ValidComponent = "div"> = DynamicProps<T, RootProps>;
 
@@ -59,20 +59,26 @@ const DrawerOverlay = <T extends ValidComponent = "div">(props: DrawerOverlayPro
 };
 
 type DrawerContentProps<T extends ValidComponent = "div"> = DynamicProps<T, ContentProps> &
-  Pick<ComponentProps<T>, "class" | "children"> & { portalMount?: HTMLElement };
+  Pick<ComponentProps<T>, "class" | "children"> & { portalMount?: HTMLElement; overlay?: boolean };
 
 const DrawerContent = <T extends ValidComponent = "div">(props: DrawerContentProps<T>) => {
   const [local, others] = splitProps(props as DrawerContentProps, [
     "class",
     "children",
     "portalMount",
+    "overlay",
   ]);
   return (
-    <Portal mount={local.portalMount}>
-      <DrawerOverlay />
+    <Portal data-slot="drawer-portal" mount={local.portalMount}>
+      <Show when={local.overlay !== false}>
+        <DrawerOverlay />
+      </Show>
       <Content
         data-slot="drawer-content"
-        class={cn("group/drawer-content fixed z-50 z-drawer-content", local.class)}
+        class={cn(
+          "group/drawer-content fixed z-50 z-drawer-content motion-reduce:transition-none",
+          local.class,
+        )}
         {...others}
       >
         <div class="z-drawer-handle mx-auto hidden shrink-0 bg-muted group-data-[side=bottom]/drawer-content:block" />

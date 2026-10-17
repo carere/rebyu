@@ -1,13 +1,24 @@
-import { type Accessor, createEffect, createMemo, createSignal } from "solid-js";
+import {
+  type Accessor,
+  createEffect,
+  createMemo,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
+import { m } from "#i18n/messages";
 import type { categories } from "../constants";
 import type { Anchor, ClientConfig, Review } from "../schema";
 import { findAnchor, HOST_ID } from "./anchors";
 import { createApi } from "./api";
+import { useColorMode } from "./components/color-mode";
 import { ReviewCanvas } from "./ReviewCanvas";
 import { ReviewDrawer } from "./ReviewDrawer";
 import { ReviewToolbar } from "./ReviewToolbar";
 import { setupReviewEvents } from "./review-events";
-import { filterReviews, linkedReviewId, type ReviewScope, reviewUrl } from "./reviews";
+import { createReviewFilters } from "./review-filters";
+import { createReviewer } from "./reviewer";
+import { filterReviews, linkedReviewId, reviewUrl } from "./reviews";
 
 type Mode = "browse" | "element" | "rectangle" | "draw";
 type Box = { x: number; y: number; width: number; height: number };
@@ -24,39 +35,41 @@ function createReviewModel(props: {
     [active, setActive] = createSignal<string>(),
     [draft, setDraft] = createSignal<Anchor>();
   const [message, setMessage] = createSignal(""),
-    [author, setAuthor] = createSignal(readAuthor()),
     [category, setCategory] = createSignal<(typeof categories)[number]>("feedback");
-  const [reply, setReply] = createSignal(""),
-    [query, setQuery] = createSignal(""),
-    [filter, setFilter] = createSignal("open"),
-    [mine, setMine] = createSignal(false),
-    [scope, setScope] = createSignal<ReviewScope>("all");
+  const [reply, setReply] = createSignal("");
+  const reviewFilters = createReviewFilters();
+  const { query, setQuery, mine, setMine, scope, setScope, unreadOnly, setUnreadOnly } =
+    reviewFilters;
   const [error, setError] = createSignal(""),
     [busy, setBusy] = createSignal(false),
     [pending, setPending] = createSignal(0),
     [pins, setPins] = createSignal(true),
-    [dark, setDark] = createSignal(false),
-    [help, setHelp] = createSignal(false),
     [capture, setCapture] = createSignal(false);
+  const { colorMode, toggleColorMode } = useColorMode();
+  const dark = () => colorMode() === "dark";
   const [hover, setHover] = createSignal<Box>(),
     [drawing, setDrawing] = createSignal<Box>(),
     [path, setPath] = createSignal<{ x: number; y: number }[]>([]),
     [tick, setTick] = createSignal(0);
+  const { user, author, setAuthor, unreadFor, unreadCount, markRead } = createReviewer(
+    props.config,
+    reviews,
+  );
   const pageReviews = createMemo(() => reviews().filter((r) => r.page === props.page()));
-  const scopedReviews = createMemo(() => (scope() === "all" ? reviews() : pageReviews()));
   const visible = createMemo(() =>
-    filterReviews(reviews(), {
-      page: props.page(),
-      scope: scope(),
-      status: filter(),
-      query: query(),
-      author: mine() ? author().trim() || "\0" : undefined,
-    }),
+    filterReviews(
+      reviews().filter((review) => !unreadOnly() || unreadFor(review) > 0),
+      {
+        page: props.page(),
+        scope: scope(),
+        status: "open",
+        query: query(),
+        author: mine() ? author().trim() || "\0" : undefined,
+        authorId: mine() ? user()?.id : undefined,
+      },
+    ),
   );
   const current = createMemo(() => reviews().find((r) => r.id === active()));
-  const count = createMemo(
-    () => scopedReviews().filter((r) => ["open", "in-progress"].includes(r.status)).length,
-  );
   async function refresh() {
     try {
       setReviews(await api.list());
@@ -121,7 +134,7 @@ function createReviewModel(props: {
     setBusy(true);
     setError("");
     try {
-      localStorage.setItem("rebyu:author", author().trim());
+      if (!user()) localStorage.setItem("rebyu:author", author().trim());
       let screenshot: string | undefined;
       if (capture()) {
         const { toPng } = await import("html-to-image");
@@ -139,14 +152,14 @@ function createReviewModel(props: {
             !(node instanceof Element) ||
             !node.matches(`#${HOST_ID},[data-rebyu-ignore],input,textarea,select`),
         });
-        if (screenshot.length > 3_000_000)
-          throw new Error("Screenshot is too large. Turn off screenshot capture and try again.");
+        if (screenshot.length > 3_000_000) throw new Error(m.review_screenshot_too_large());
       }
       await api.create({
         id: crypto.randomUUID(),
         page: props.page(),
         anchor,
         author: author().trim(),
+        authorId: user()?.id,
         message: message().trim(),
         category: category(),
         ...(screenshot ? { screenshot } : {}),
@@ -162,7 +175,9 @@ function createReviewModel(props: {
     } catch (e) {
       setPending(api.pending());
       setError(
-        `${(e as Error).message}${api.pending() ? " — saved in the local outbox. Retry sync when connected." : ""}`,
+        api.pending()
+          ? m.review_outbox_error({ error: (e as Error).message })
+          : (e as Error).message,
       );
       if (api.pending()) {
         setDraft();
@@ -181,21 +196,12 @@ function createReviewModel(props: {
       setReply("");
       setError("");
       await refresh();
+      if (reviews().find((review) => review.id === selected.id)?.status === "resolved") setActive();
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setBusy(false);
     }
-  }
-  function exportReviews() {
-    const blob = new Blob([JSON.stringify(visible(), null, 2)], {
-      type: "application/json",
-    });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "rebyu-reviews.json";
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
   createEffect(() => {
     props.page();
@@ -215,10 +221,19 @@ function createReviewModel(props: {
     props.page();
     openLinkedReview();
   });
+  const [pageVisible, setPageVisible] = createSignal(document.visibilityState === "visible");
+  onMount(() => {
+    const visibility = () => setPageVisible(document.visibilityState === "visible");
+    document.addEventListener("visibilitychange", visibility);
+    onCleanup(() => document.removeEventListener("visibilitychange", visibility));
+  });
   createEffect(() => {
-    props.portalMount.dataset.theme = dark() ? "dark" : "light";
+    const selected = current();
+    if (selected && open() && pageVisible()) markRead(selected);
   });
   const model = {
+    filters: reviewFilters.filters,
+    setFilters: reviewFilters.setFilters,
     props,
     api,
     open,
@@ -235,14 +250,17 @@ function createReviewModel(props: {
     setMessage,
     author,
     setAuthor,
+    user,
+    unreadFor,
+    unreadCount,
+    unreadOnly,
+    setUnreadOnly,
     category,
     setCategory,
     reply,
     setReply,
     query,
     setQuery,
-    filter,
-    setFilter,
     mine,
     setMine,
     scope,
@@ -256,9 +274,7 @@ function createReviewModel(props: {
     pins,
     setPins,
     dark,
-    setDark,
-    help,
-    setHelp,
+    toggleColorMode,
     capture,
     setCapture,
     hover,
@@ -270,10 +286,8 @@ function createReviewModel(props: {
     tick,
     setTick,
     pageReviews,
-    scopedReviews,
     visible,
     current,
-    count,
     refresh,
     sync,
     cancel,
@@ -282,7 +296,6 @@ function createReviewModel(props: {
     draftReview,
     submit,
     update,
-    exportReviews,
     openLinkedReview,
   };
   setupReviewEvents(model);
@@ -298,11 +311,4 @@ export function App(props: Parameters<typeof createReviewModel>[0]) {
       <ReviewDrawer model={model} />
     </>
   );
-}
-function readAuthor() {
-  try {
-    return localStorage.getItem("rebyu:author") ?? "";
-  } catch {
-    return "";
-  }
 }
