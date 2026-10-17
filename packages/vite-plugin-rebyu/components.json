@@ -10,9 +10,11 @@
     "cssVariables": true
   },
   "aliases": {
-    "components": "./src/client/components",
-    "ui": "./src/client/components/ui",
-    "utils": "./src/client/lib/utils"
+    "components": "#components",
+    "ui": "#ui",
+    "utils": "#utils"
   },
-  "registries": { "@zaidan": "https://zaidan.carere.dev/r/{style}/{name}.json" }
+  "registries": {
+    "@zaidan": "https://zaidan.carere.dev/r/{style}/{name}.json"
+  }
 }

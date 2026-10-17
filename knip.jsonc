@@ -14,16 +14,29 @@
     "packages/vite-plugin-rebyu": {
       "entry": [
         "src/index.ts",
+        "src/client-api.ts",
         "src/client/index.tsx",
         "vite.client.config.ts",
-        "tests/**/*.test.ts"
+        "scripts/compile-i18n.ts",
+        "tests/**/*.test.ts",
+        "tests/integration/browser/**/*.e2e.ts"
       ],
-      "project": ["src/**/*.{ts,tsx,css}", "tests/**/*.ts", "*.ts"],
-      // Preserve the published API and the vendored Zaidan primitive API.
+      "project": [
+        "src/**/*.{ts,tsx,css}",
+        "tests/**/*.ts",
+        "postcss/**/*.ts",
+        "scripts/**/*.ts",
+        "*.ts"
+      ],
+      // Preserve the published API and the vendored Zaidan component APIs.
       "includeEntryExports": false,
       // Knip does not discover CLI commands in project-level Moon files.
       "ignoreDependencies": ["tsup"],
-      "ignore": ["src/client/components/ui/*.tsx"]
+      "ignore": [
+        "src/client/components/ui/*.tsx",
+        "src/client/components/color-mode.tsx",
+        "src/client/components/blocks/filters/**"
+      ]
     }
   }
 }

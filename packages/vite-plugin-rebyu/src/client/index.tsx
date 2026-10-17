@@ -1,8 +1,11 @@
-import { createSignal, onCleanup } from "solid-js";
+import { createEffect, createSignal, onCleanup } from "solid-js";
 import { render } from "solid-js/web";
+import { getTextDirection } from "#i18n/runtime";
 import type { ClientConfig } from "../schema";
 import { App } from "./App";
 import { HOST_ID } from "./anchors";
+import { ColorModeProvider, getClientColorMode } from "./components/color-mode";
+import { initializeLocale, locale } from "./localization";
 import styles from "./styles.css?inline";
 export function mount(config: ClientConfig) {
   if (document.getElementById(HOST_ID)) return;
@@ -29,10 +32,19 @@ export function mount(config: ClientConfig) {
     window.addEventListener("unhandledrejection", onRejection);
   }
   const dispose = render(() => {
+    initializeLocale();
+    createEffect(() => {
+      container.lang = locale();
+      container.dir = getTextDirection(locale());
+    });
     const [page, setPage] = createSignal(location.pathname + location.search);
     const interval = window.setInterval(() => setPage(location.pathname + location.search), 300);
     onCleanup(() => clearInterval(interval));
-    return <App config={config} portalMount={container} page={page} errors={errors} />;
+    return (
+      <ColorModeProvider initialColorMode={getClientColorMode()} target={container}>
+        <App config={config} portalMount={container} page={page} errors={errors} />
+      </ColorModeProvider>
+    );
   }, container);
   const teardown = () => {
     dispose();

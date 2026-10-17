@@ -1,7 +1,10 @@
 import { X } from "lucide-solid";
-import { createMemo, For, Show } from "solid-js";
+import { createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js";
+import { m } from "#i18n/messages";
 import type { ReviewModel } from "./App";
 import { anchorBox } from "./anchors";
+import { Button } from "./components/ui/button";
+import { pinPosition } from "./pins";
 import { boxStyle } from "./view-utils";
 export function ReviewCanvas(input: { model: ReviewModel }) {
   const { mode, active, pins, hover, drawing, path, tick, pageReviews, cancel, selectReview } =
@@ -19,6 +22,22 @@ export function ReviewCanvas(input: { model: ReviewModel }) {
               tick();
               return anchorBox(review.anchor);
             });
+            let pin: HTMLButtonElement | undefined;
+            const [size, setSize] = createSignal({ width: 27, height: 27 });
+            onMount(() => {
+              if (!pin) return;
+              const measure = () => {
+                if (pin) setSize({ width: pin.offsetWidth, height: pin.offsetHeight });
+              };
+              measure();
+              const observer = new ResizeObserver(measure);
+              observer.observe(pin);
+              onCleanup(() => observer.disconnect());
+            });
+            const position = createMemo(() => {
+              tick();
+              return pinPosition(box(), size(), { width: innerWidth, height: innerHeight });
+            });
             return (
               <>
                 <Show when={active() === review.id}>
@@ -34,17 +53,23 @@ export function ReviewCanvas(input: { model: ReviewModel }) {
                     </Show>
                   </div>
                 </Show>
-                <button
+                <Button
+                  variant="default"
                   type="button"
+                  ref={pin}
                   class="pin"
                   classList={{ "pin-active": active() === review.id }}
-                  aria-label={`Open comment ${review.number}`}
-                  title={`#${review.number} · ${review.message}${box().attached ? "" : " (element moved)"}`}
-                  style={{ left: `${box().x}px`, top: `${box().y}px` }}
+                  aria-label={m.review_open_comment({ number: review.number })}
+                  title={`#${review.number} · ${review.message}${box().attached ? "" : m.review_element_moved()}`}
+                  style={{
+                    left: `${position().x}px`,
+                    top: `${position().y}px`,
+                    visibility: position().visible ? "visible" : "hidden",
+                  }}
                   onClick={() => selectReview(review)}
                 >
                   {review.number}
-                </button>
+                </Button>
               </>
             );
           }}
@@ -76,13 +101,18 @@ export function ReviewCanvas(input: { model: ReviewModel }) {
         <div class="mode-hint">
           <span class="live-dot" />
           {mode() === "element"
-            ? "Click an element, or Tab to it and press Enter"
+            ? m.review_hint_element()
             : mode() === "draw"
-              ? "Draw around the part you want to review"
-              : "Drag to select an area"}
-          <button type="button" onClick={cancel}>
-            Esc <X size={13} />
-          </button>
+              ? m.review_hint_draw()
+              : m.review_hint_rectangle()}
+          <Button
+            variant="ghost"
+            type="button"
+            aria-label={m.review_cancel_annotation()}
+            onClick={cancel}
+          >
+            {m.review_key_escape()} <X size={13} />
+          </Button>
         </div>
       </Show>
     </>

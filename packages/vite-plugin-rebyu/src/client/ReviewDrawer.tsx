@@ -1,133 +1,133 @@
-import { ArrowDownToLine, Check, CircleHelp, Moon, RotateCcw, Sun, X } from "lucide-solid";
-import { Show } from "solid-js";
+import { Moon, RotateCcw, Sun, X } from "lucide-solid";
+import { createEffect, createSignal, onCleanup, Show } from "solid-js";
+import { m } from "#i18n/messages";
 import type { ReviewModel } from "./App";
-import { Drawer, DrawerContent, DrawerTitle } from "./components/ui/drawer";
+import { Alert, AlertAction, AlertDescription } from "./components/ui/alert";
+import { Badge } from "./components/ui/badge";
+import { Button } from "./components/ui/button";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "./components/ui/drawer";
 import { ReviewComposer } from "./ReviewComposer";
 import { ReviewDetail } from "./ReviewDetail";
 import { ReviewInbox } from "./ReviewInbox";
+import { ReviewLanguage } from "./ReviewLanguage";
+import { ReviewShortcuts } from "./ReviewShortcuts";
 export function ReviewDrawer(input: { model: ReviewModel }) {
-  const {
-    props,
-    open,
-    setOpen,
-    error,
-    setError,
-    pending,
-    dark,
-    setDark,
-    help,
-    setHelp,
-    sync,
-    exportReviews,
-  } = input.model;
+  const { props, open, setOpen, error, setError, pending, dark, toggleColorMode, sync } =
+    input.model;
+  const [drawerOpen, setDrawerOpen] = createSignal(open());
+  let opening = false;
+  let disposed = false;
+  let frame = 0;
+  createEffect(() => {
+    const requested = open();
+    if (requested || !opening) setDrawerOpen(requested);
+  });
+  onCleanup(() => {
+    disposed = true;
+    cancelAnimationFrame(frame);
+  });
+  function contentPresent(present: boolean) {
+    cancelAnimationFrame(frame);
+    opening = present;
+    if (present) {
+      // Let Corvu's two-frame opening setup finish before accepting a close.
+      frame = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => {
+          frame = requestAnimationFrame(() => {
+            frame = requestAnimationFrame(() => {
+              opening = false;
+              setDrawerOpen(open());
+            });
+          });
+        });
+      });
+      return;
+    }
+    if (!open()) return;
+    // Corvu finishes an interrupted exit before accepting another open request.
+    setDrawerOpen(false);
+    queueMicrotask(() => {
+      if (!disposed && open()) setDrawerOpen(true);
+    });
+  }
   return (
-    <Show when={open()}>
-      <Drawer
-        side="right"
-        open={open()}
-        onOpenChange={setOpen}
-        modal={false}
-        trapFocus={false}
-        closeOnOutsidePointer={false}
-        closeOnOutsideFocus={false}
-        preventScroll={false}
+    <Drawer
+      side="right"
+      open={drawerOpen()}
+      onOpenChange={setOpen}
+      onContentPresentChange={contentPresent}
+      modal={false}
+      trapFocus={false}
+      closeOnEscapeKeyDown={false}
+      closeOnOutsidePointer={false}
+      closeOnOutsideFocus={false}
+      preventScroll={false}
+    >
+      <DrawerContent
+        portalMount={props.portalMount}
+        class="review-drawer rounded-none p-0 before:inset-0 before:rounded-none"
+        overlay={false}
+        data-corvu-no-drag
       >
-        <DrawerContent portalMount={props.portalMount} class="review-drawer" data-corvu-no-drag>
-          <header class="drawer-header">
-            <div class="drawer-brand">
-              <span class="mini-mark">r↗</span>
-              <DrawerTitle>
-                rebyu<span class="beta">BETA</span>
-              </DrawerTitle>
-            </div>
-            <div class="header-actions">
-              <button
-                type="button"
-                title="Toggle theme"
-                aria-label="Toggle theme"
-                onClick={() => setDark((v) => !v)}
-              >
-                {dark() ? <Sun size={16} /> : <Moon size={16} />}
-              </button>
-              <button
-                type="button"
-                title="Close reviews"
-                aria-label="Close reviews"
-                onClick={() => setOpen(false)}
-              >
-                <X size={18} />
-              </button>
-            </div>
-          </header>
-          <div class="project-label">
-            <span class="live-dot" />
-            {props.config.projectName}
-            <span>LOCAL</span>
+        <DrawerHeader class="drawer-header">
+          <div class="drawer-brand">
+            <Badge>r↗</Badge>
+            <DrawerTitle class="drawer-title">
+              <span>rebyu</span>
+              <span class="project-separator" aria-hidden="true" />
+              <span class="project-name" title={props.config.projectName}>
+                {props.config.projectName}
+              </span>
+            </DrawerTitle>
           </div>
-          <Show when={error()}>
-            <div class="notice" role="alert">
-              {error()}
-              <button type="button" aria-label="Dismiss error" onClick={() => setError("")}>
+          <div class="header-actions">
+            <ReviewLanguage portalMount={props.portalMount} />
+            <Button
+              variant="ghost"
+              type="button"
+              title={m.review_toggle_theme()}
+              aria-label={m.review_toggle_theme()}
+              onClick={toggleColorMode}
+            >
+              {dark() ? <Sun size={16} /> : <Moon size={16} />}
+            </Button>
+            <ReviewShortcuts portalMount={props.portalMount} />
+            <Button
+              variant="ghost"
+              type="button"
+              title={m.review_close_reviews()}
+              aria-label={m.review_close_reviews()}
+              onClick={() => setOpen(false)}
+            >
+              <X size={18} />
+            </Button>
+          </div>
+        </DrawerHeader>
+        <Show when={error()}>
+          <Alert class="notice" variant="destructive">
+            <AlertDescription>{error()}</AlertDescription>
+            <AlertAction>
+              <Button
+                variant="ghost"
+                type="button"
+                aria-label={m.review_dismiss_error()}
+                onClick={() => setError("")}
+              >
                 <X size={13} />
-              </button>
-            </div>
-          </Show>
-          <Show when={pending()}>
-            <button type="button" class="sync-notice" onClick={() => void sync()}>
-              <RotateCcw size={14} />
-              {pending()} pending · Retry sync
-            </button>
-          </Show>
-          <ReviewInbox model={input.model} />
-          <ReviewComposer model={input.model} />
-          <ReviewDetail model={input.model} />
-          <Show when={help()}>
-            <div class="help-panel">
-              <strong>A shortcut to better feedback</strong>
-              <p>
-                <kbd>Alt R</kbd> Toggle reviews
-                <br />
-                <kbd>Esc</kbd> Cancel annotation
-                <br />
-                <kbd>J</kbd> / <kbd>K</kbd> Next / previous comment
-                <br />
-                Select mode: <kbd>Tab</kbd> then <kbd>Enter</kbd>
-              </p>
-              <button type="button" onClick={() => setHelp(false)}>
-                Got it <Check size={13} />
-              </button>
-            </div>
-          </Show>
-          <footer class="drawer-footer">
-            <span>
-              <span class="live-dot" />
-              {pending()
-                ? "Waiting to sync"
-                : error()
-                  ? "Connection needs attention"
-                  : "Saved on your server"}
-            </span>
-            <div>
-              <button
-                type="button"
-                title="Export filtered reviews"
-                aria-label="Export filtered reviews"
-                onClick={exportReviews}
-              >
-                <ArrowDownToLine size={15} />
-              </button>
-              <button
-                type="button"
-                title="Keyboard shortcuts"
-                aria-label="Keyboard shortcuts"
-                onClick={() => setHelp((v) => !v)}
-              >
-                <CircleHelp size={16} />
-              </button>
-            </div>
-          </footer>
-        </DrawerContent>
-      </Drawer>
-    </Show>
+              </Button>
+            </AlertAction>
+          </Alert>
+        </Show>
+        <Show when={pending()}>
+          <Button variant="ghost" type="button" class="sync-notice" onClick={() => void sync()}>
+            <RotateCcw size={14} />
+            {m.review_pending_sync({ count: pending() })}
+          </Button>
+        </Show>
+        <ReviewInbox model={input.model} />
+        <ReviewComposer model={input.model} />
+        <ReviewDetail model={input.model} />
+      </DrawerContent>
+    </Drawer>
   );
 }

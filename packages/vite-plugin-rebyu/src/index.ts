@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 import type { HtmlTagDescriptor, Plugin, ResolvedConfig, UserConfig, ViteDevServer } from "vite";
+import { installClientApi } from "./client-api";
 import { reviewMiddleware } from "./middleware";
 import type { ClientConfig } from "./schema";
 import { ReviewStore } from "./store";
@@ -59,6 +60,7 @@ class RebyuPlugin implements Plugin {
     if (this.settings.enabled === false || !this.client) return;
     const serialized = JSON.stringify(this.client).replace(/</g, "\\u003c");
     return [
+      { tag: "script", children: `(${installClientApi.toString()})();`, injectTo: "head-prepend" },
       {
         tag: "script",
         attrs: { type: "module" },

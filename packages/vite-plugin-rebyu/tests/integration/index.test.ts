@@ -11,6 +11,7 @@ function fixture(): NewReview {
     id: crypto.randomUUID(),
     page: "/",
     author: "Kevin",
+    authorId: "kevin",
     message: "Give this some room",
     category: "feedback",
     anchor: {
@@ -51,6 +52,7 @@ describe("Vite integration", () => {
   it("injects under the Vite base, escapes config, and serves the precompiled framework independent widget", async () => {
     const html = await (await fetch(url)).text();
     expect(html).toContain("/nested/__rebyu/client.js");
+    expect(html.indexOf("window.rebyu")).toBeLessThan(html.indexOf("/nested/__rebyu/client.js"));
     expect(html).toContain("Test \\u003c/script>");
     expect(html).not.toContain("Test </script>");
     const widget = await fetch(`${url}__rebyu/client.js`);
@@ -67,7 +69,16 @@ describe("Vite integration", () => {
     });
     expect(created.status).toBe(201);
     const review = await created.json();
+    expect(review.authorId).toBe("kevin");
     expect(await (await fetch(endpoint)).json()).toHaveLength(1);
+    const replied = await fetch(`${endpoint}/${review.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        reply: { id: crypto.randomUUID(), author: "Alice", authorId: "alice", message: "Done" },
+      }),
+    });
+    expect((await replied.json()).replies[0].authorId).toBe("alice");
     const updated = await fetch(`${endpoint}/${review.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -77,6 +88,8 @@ describe("Vite integration", () => {
     expect((await fetch(`${endpoint}/${review.id}`, { method: "DELETE" })).status).toBe(200);
     expect(await (await fetch(endpoint)).json()).toEqual([]);
   });
+});
+describe("Vite API boundaries", () => {
   it("rejects malformed input, cross-origin calls, and raw access to review files", async () => {
     const endpoint = `${url}__rebyu/reviews`;
     expect(
@@ -111,6 +124,29 @@ describe("Vite integration", () => {
     const html = outputs
       .flatMap((x) => ("output" in x ? x.output : []))
       .find((x) => x.fileName === "index.html");
-    expect(html && "source" in html ? String(html.source) : "").not.toContain("__rebyu");
+    const output = html && "source" in html ? String(html.source) : "";
+    expect(output).not.toContain("__rebyu");
+    expect(output).not.toContain("window.rebyu");
+  });
+});
+
+describe("Given the plugin is disabled", () => {
+  it("Then neither the identity API nor the widget is injected", async () => {
+    const disabled = await createServer({
+      configFile: false,
+      root: dir,
+      plugins: [rebyu({ enabled: false })],
+      server: { watch: null },
+    });
+    try {
+      const html = await disabled.transformIndexHtml(
+        "/",
+        "<html><head></head><body></body></html>",
+      );
+      expect(html).not.toContain("window.rebyu");
+      expect(html).not.toContain("__rebyu");
+    } finally {
+      await disabled.close();
+    }
   });
 });

@@ -5,6 +5,23 @@ import { HOST_ID, isIgnored, makeAnchor } from "./anchors";
 function fromWidget(e: Event) {
   return e.composedPath().some((n) => n instanceof Element && n.id === HOST_ID);
 }
+// Corvu and Kobalte have separate dismissal stacks. Route Escape once here,
+// before the popup handles it, so dismissing a menu does not close the drawer.
+function popupOwnsKey(event: KeyboardEvent, target: EventTarget | undefined, model: ReviewModel) {
+  if (model.props.portalMount.querySelector('[data-slot="dialog-content"][data-expanded]'))
+    return true;
+  if (event.key === "Escape")
+    return !!model.props.portalMount.querySelector(
+      '[role="menu"][data-expanded], [data-slot="select-content"][data-expanded], [data-slot="popover-content"][data-expanded]',
+    );
+  return (
+    target instanceof Element &&
+    !!target.closest(
+      '[data-slot="select-trigger"], [data-slot="select-content"], [data-slot^="dropdown-menu-"], [data-slot="popover-trigger"], [data-slot="popover-content"]',
+    )
+  );
+}
+
 class ReviewEvents {
   private origin: { x: number; y: number; element: Element } | undefined;
   private suppressUntil = 0;
@@ -102,13 +119,15 @@ class ReviewEvents {
     const { open, setOpen, mode, active, setDraft, visible, cancel, selectReview, draftReview } =
       this.model;
 
+    const target = e.composedPath()[0];
+    if (popupOwnsKey(e, target, this.model)) return;
     if (e.key === "Escape") {
       this.origin = undefined;
       cancel();
       setDraft();
+      setOpen(false);
       return;
     }
-    const target = e.composedPath()[0];
     if (
       target instanceof HTMLElement &&
       (target.matches("input,textarea,select") || target.isContentEditable)
