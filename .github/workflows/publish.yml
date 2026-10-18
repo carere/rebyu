@@ -98,7 +98,7 @@ jobs:
           printf 'tag=%s\n' "$release_tag" >> "$GITHUB_OUTPUT"
           printf 'commit=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
   publish:
-    name: Verify and publish vite-plugin-rebyu
+    name: Verify and publish @carere/rebyu
     needs: prepare
     if: needs.prepare.outputs.tag != ''
     runs-on: ubuntu-24.04

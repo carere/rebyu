@@ -125,7 +125,7 @@ browser tests cover switching, draft preservation, filters, and persisted prefer
 Once the first release is published, install it from npm:
 
 ```sh
-npm install -D vite-plugin-rebyu
+npm install -D @carere/rebyu
 ```
 
 To try an unpublished build, build and pack it from this repository:
@@ -135,14 +135,14 @@ bun moon run vite-plugin-rebyu:build
 cd packages/vite-plugin-rebyu
 npm pack
 # In your other Vite project:
-npm install -D /absolute/path/to/vite-plugin-rebyu-0.1.0.tgz
+npm install -D /absolute/path/to/carere-rebyu-0.1.0.tgz
 ```
 
 Add it alongside your existing framework plugins:
 
 ```ts
 import { defineConfig } from "vite";
-import rebyu from "vite-plugin-rebyu";
+import rebyu from "@carere/rebyu";
 
 export default defineConfig({
   plugins: [rebyu({ projectName: "My website" })],
@@ -177,7 +177,7 @@ before the widget mounts are retained.
 
 ```ts
 // Optional TypeScript declaration (no runtime import):
-import type {} from "vite-plugin-rebyu/client";
+import type {} from "@carere/rebyu/client";
 
 window.rebyu?.setUser({ id: "user-123", name: "Kevin Abatan" });
 window.rebyu?.getUser(); // { id: "user-123", name: "Kevin Abatan" }

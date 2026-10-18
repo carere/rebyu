@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
+import rebyu from "@carere/rebyu";
 import { defineConfig } from "vite";
-import rebyu from "vite-plugin-rebyu";
 export default defineConfig(({ mode }) => ({
   publicDir: "../../assets",
   plugins: [

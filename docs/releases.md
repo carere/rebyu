@@ -1,6 +1,6 @@
 # npm releases
 
-Rebyu publishes one package, `vite-plugin-rebyu`. The workspace root and website
+Rebyu publishes one package, `@carere/rebyu`. The workspace root and website
 stay private. Cocogitto owns the stable version, release commit, `vMAJOR.MINOR.PATCH`
 tag, and root `CHANGELOG.md`. Its pre-bump hooks update the plugin manifest and
 `bun.lock`. All repository commits contribute to the changelog; there is no separate
@@ -23,19 +23,20 @@ as required by [npm trusted publishing](https://docs.npmjs.com/trusted-publisher
 Publishing uses GitHub OIDC (`id-token: write`); no `NPM_TOKEN` secret is needed.
 npm automatically adds provenance when trusted publishing from a public repository.
 
-## First release
+## First publish under the scoped name
 
-First merge the release setup into `main`. The package must exist on npm before
-its trusted publisher can be configured. A maintainer with the intended npm account
-must perform this initial publish; these commands publish a real public package.
+The original `vite-plugin-rebyu@0.1.0` release remains on npm. npm package names
+cannot be changed in place: `@carere/rebyu` is a separate public package with its
+own trusted publisher configuration. Consumers install `@carere/rebyu` and change
+imports to `@carere/rebyu` or `@carere/rebyu/client`.
 
-From a clean, up-to-date `main`, with the toolchain from the root README installed:
+First merge the package-name change through a PR, then publish from clean,
+up-to-date `main` with the toolchain from the root README installed:
 
 ```sh
 git switch main
-git pull --ff-only
+git pull --ff-only origin main
 bun install --frozen-lockfile
-cog bump --version 0.1.0
 bun moon run vite-plugin-rebyu:build website:build
 bun tsc --noEmit
 bun biome check . --error-on-warnings
@@ -43,19 +44,37 @@ bun knip
 bun sort-package-json --check package.json 'apps/*/package.json' 'packages/*/package.json'
 bun moon run vite-plugin-rebyu:test-unit vite-plugin-rebyu:test-integration
 # Install Chromium as described in README.md if needed.
-bun moon run vite-plugin-rebyu:test-browser
+bun moon run vite-plugin-rebyu:test-browser website:test-browser
 npm login
 cd packages/vite-plugin-rebyu
-npm pack --dry-run
-npm publish --access public
+bun pm whoami
+bun pm pack --dry-run
+bun publish --access public
 cd ../..
 ```
 
 Review the package contents before publishing. The manifest's `files` allowlist
 ships `dist/` and `THIRD_PARTY_LICENSES.md`; npm also includes the package README,
 manifest, and MIT license. The bundled client must be present under `dist/client/`.
+The package already declares public access in `publishConfig`.
 
-Open `vite-plugin-rebyu` → Settings → Trusted publishing on npmjs.com and add:
+The scoped package can start at `0.1.0` because it has a different npm name. Keep
+the existing repository tag `v0.1.0` on the original release commit; do not move or
+push it again for the scoped package. Subsequent releases continue the repository's
+existing version sequence through the release workflow.
+
+npm may accept the upload before its publish-time scan makes it installable. Wait
+until `npm view @carere/rebyu@0.1.0 version` succeeds; do not retry the upload merely
+because the registry temporarily returns 404.
+
+After confirming the scoped package is available, the old package can be deprecated
+with a migration message while keeping existing installations working:
+
+```sh
+npm deprecate vite-plugin-rebyu "Renamed to @carere/rebyu. Install @carere/rebyu and update your imports."
+```
+
+Open `@carere/rebyu` → Settings → Trusted publishing on npmjs.com and add:
 
 - Provider: GitHub Actions.
 - Organization or user: `carere`.
@@ -64,17 +83,10 @@ Open `vite-plugin-rebyu` → Settings → Trusted publishing on npmjs.com and ad
 - Environment name: leave empty; the workflow does not use a GitHub environment.
 - Allowed actions: enable direct publishing with `npm publish`.
 
-Then review the release commit, changelog, manifest, and lockfile, and push them:
-
-```sh
-git show --stat HEAD
-git push --atomic origin main refs/tags/v0.1.0
-```
-
-The workflow validates this first tag but skips publishing the version that was
-already published manually. Newly configured trusted publishers must complete a
-successful CI publish within two days. Create the configuration when the next
-release is ready, or recreate it if it expires before that release.
+Settings on `vite-plugin-rebyu` do not carry over to `@carere/rebyu`. Newly configured
+trusted publishers must complete a successful CI publish within two days. Create
+the configuration when the next release is ready, or recreate it if it expires
+before that release. Verifying an already-published version does not validate it.
 
 ## Subsequent releases
 
@@ -102,7 +114,7 @@ changes intended for a later release.
 
 During initial setup, enable **Settings → Actions → General → Workflow permissions
 → Allow GitHub Actions to create and approve pull requests**. The repository
-currently disables this setting. Leave the default workflow permissions read-only;
+already enables this setting. Leave the default workflow permissions read-only;
 this workflow grants `contents: write` and `pull-requests: write` only to preparation,
 and `contents: write` plus `id-token: write` to publishing (which creates the tag).
 No GitHub App or personal access token is required. The workflow does not modify

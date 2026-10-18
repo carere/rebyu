@@ -1,10 +1,10 @@
-# vite-plugin-rebyu
+# @carere/rebyu
 
 Visual reviews on your Vite development server, powered by SolidJS and [Zaidan](https://zaidan.carere.dev).
 
 ```ts
 import { defineConfig } from "vite";
-import rebyu from "vite-plugin-rebyu";
+import rebyu from "@carere/rebyu";
 
 export default defineConfig({
   plugins: [rebyu({ projectName: "My website" })],
@@ -26,7 +26,7 @@ Read receipts are local to this browser and scoped to the project and reviewer.
 Your application can identify its current reviewer before or after widget mount:
 
 ```ts
-import type {} from "vite-plugin-rebyu/client";
+import type {} from "@carere/rebyu/client";
 window.rebyu?.setUser({ id: "user-123", name: "Kevin Abatan" });
 // On sign-out: window.rebyu?.setUser(null);
 ```

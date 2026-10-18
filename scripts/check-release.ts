@@ -10,7 +10,8 @@ if (process.env.RELEASE_TAG !== `v${manifest.version}`) {
   throw new Error("The release tag must match the plugin package version.");
 }
 
-const response = await fetch(`https://registry.npmjs.org/${manifest.name}/${manifest.version}`, {
+const packageName = encodeURIComponent(manifest.name);
+const response = await fetch(`https://registry.npmjs.org/${packageName}/${manifest.version}`, {
   signal: AbortSignal.timeout(30_000),
 });
 if (!response.ok && response.status !== 404) {

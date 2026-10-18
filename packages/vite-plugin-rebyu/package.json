@@ -1,5 +1,5 @@
 {
-  "name": "vite-plugin-rebyu",
+  "name": "@carere/rebyu",
   "version": "0.1.0",
   "description": "Visual UI reviews for any Vite project. Powered by SolidJS and Zaidan.",
   "keywords": [

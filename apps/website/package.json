@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "devDependencies": {
+    "@carere/rebyu": "workspace:*",
     "@playwright/test": "1.63.0",
     "vite": "^7.1.0",
-    "vite-plugin-rebyu": "workspace:*",
     "wrangler": "4.151.1"
   }
 }
