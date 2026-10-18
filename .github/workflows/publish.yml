@@ -1,0 +1,163 @@
+name: Release to npm
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    types: [closed]
+  push:
+    tags: ["v*"]
+permissions:
+  contents: read
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+jobs:
+  prepare:
+    name: Prepare the release
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.merged &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       startsWith(github.event.pull_request.head.ref, 'release/v') &&
+       github.event.pull_request.user.login == 'github-actions[bot]')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+      commit: ${{ steps.release.outputs.commit }}
+    steps:
+      - name: Require manual releases to run from main
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
+        run: |
+          echo "Select main when running the release workflow."
+          exit 1
+      - name: Check out main, the merged release, or the pushed tag
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.event.pull_request.merge_commit_sha || github.ref }}
+          fetch-depth: 0
+      - name: Install the pinned toolchain
+        uses: moonrepo/setup-toolchain@261c62cb5b0f580c7be7c8cd0f023a2e96756095 # v0.6.4
+        with:
+          auto-install: true
+          cache: false
+      - name: Require the first local release to exist and prevent duplicate release PRs
+        id: baseline
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! git describe --tags --match 'v[0-9]*' --abbrev=0 HEAD; then
+            echo "Complete the first release in docs/releases.md before using this workflow."
+            exit 1
+          fi
+          open_release=$(gh pr list --base main --state open --json headRefName --jq '[.[] | select(.headRefName | startswith("release/v"))] | length')
+          if [ "$open_release" != 0 ]; then
+            echo "Merge or close the existing release PR before preparing another release."
+            exit 1
+          fi
+          printf 'commit=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Bump the version and generate the changelog with Cocogitto
+        if: github.event_name == 'workflow_dispatch'
+        uses: cocogitto/cocogitto-action@v4.1.0
+        with:
+          command: bump
+          args: --auto
+      - name: Open the release pull request
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORIGINAL_COMMIT: ${{ steps.baseline.outputs.commit }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ "$(git rev-parse HEAD)" = "$ORIGINAL_COMMIT" ]; then
+            echo "No version-affecting commits since the last release." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          release_tag=$(git describe --tags --exact-match --match 'v[0-9]*' HEAD)
+          release_branch="release/$release_tag"
+          git push origin "HEAD:refs/heads/$release_branch"
+          cp .github/release-pr.md "$RUNNER_TEMP/release-pr.md"
+          printf '\nPreparation run: %s\n' "$RUN_URL" >> "$RUNNER_TEMP/release-pr.md"
+          gh pr create --base main --head "$release_branch" --title "chore(release): $release_tag" --body-file "$RUNNER_TEMP/release-pr.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Record the exact version and commit to publish
+        id: release
+        if: github.event_name != 'workflow_dispatch'
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSHED_TAG: ${{ github.ref_name }}
+          RELEASE_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          if [ "$EVENT_NAME" = pull_request ]; then
+            release_tag="${RELEASE_BRANCH#release/}"
+          else
+            release_tag="$PUSHED_TAG"
+          fi
+          printf 'tag=%s\n' "$release_tag" >> "$GITHUB_OUTPUT"
+          printf 'commit=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  publish:
+    name: Verify and publish vite-plugin-rebyu
+    needs: prepare
+    if: needs.prepare.outputs.tag != ''
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Check out the release and full history
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ needs.prepare.outputs.commit }}
+          fetch-depth: 0
+      - name: Require the release commit to belong to main
+        run: git merge-base --is-ancestor HEAD origin/main
+      - name: Install the pinned toolchain
+        uses: moonrepo/setup-toolchain@261c62cb5b0f580c7be7c8cd0f023a2e96756095 # v0.6.4
+        with:
+          auto-install: true
+          cache: false
+      - name: Validate the tag and check npm publication status
+        id: release
+        env:
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+        run: bun scripts/check-release.ts
+      - name: Create the release tag on the merged commit
+        env:
+          RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
+        run: |
+          if git show-ref --verify --quiet "refs/tags/$RELEASE_TAG"; then
+            test "$(git rev-parse "$RELEASE_TAG^{commit}")" = "$(git rev-parse HEAD)"
+          else
+            git tag "$RELEASE_TAG" HEAD
+            git push origin "refs/tags/$RELEASE_TAG"
+          fi
+      - name: Install dependencies from the lockfile
+        run: bun install --frozen-lockfile
+      - name: Check package manifest sorting
+        run: bun sort-package-json --check package.json 'apps/*/package.json' 'packages/*/package.json'
+      - name: Check formatting, lint rules, and imports
+        run: bun biome check . --error-on-warnings
+      - name: Build the Vite plugin and website
+        run: bun moon run vite-plugin-rebyu:build website:build
+      - name: Check TypeScript types
+        run: bun tsc --noEmit
+      - name: Check unused code and dependencies
+        run: bun knip
+      - name: Run unit and integration tests
+        run: bun moon run vite-plugin-rebyu:test-unit vite-plugin-rebyu:test-integration
+      - name: Install Chromium and browser test system dependencies
+        working-directory: packages/vite-plugin-rebyu
+        run: bunx --bun playwright install --with-deps chromium
+      - name: Run widget and website browser regression tests
+        run: bun moon run vite-plugin-rebyu:test-browser website:test-browser
+      - name: Verify checks left tracked files unchanged
+        run: git diff --exit-code
+      - name: Preview the npm package contents
+        working-directory: packages/vite-plugin-rebyu
+        run: npm pack --dry-run
+      - name: Publish with npm trusted publishing
+        if: steps.release.outputs.publish == 'true'
+        working-directory: packages/vite-plugin-rebyu
+        run: npm publish --access public

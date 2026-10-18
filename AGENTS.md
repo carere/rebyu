@@ -7,7 +7,7 @@ and the contributor commands in [README.md](README.md).
 
 Use Bun workspaces and Moon for project tasks. Run `bun biome`, `bun tsc --noEmit`,
 `bun knip`, `bun sort-package-json --check ...`, and Cocogitto directly at the root.
-Use `bun moon run playground:dev` for development; the task builds its plugin dependency.
+Use `bun moon run website:dev` for development; the task builds its plugin dependency.
 Do not add package scripts or a second formatter/linter. Keep the plugin independent
 of the host framework and mount its Zaidan portals inside the widget ShadowRoot.
 

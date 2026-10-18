@@ -59,7 +59,7 @@
   gap: 8px;
   min-width: 0;
 }
-.drawer-brand > [data-slot="badge"],
+.drawer-brand > .brand-icon,
 .drawer-title > span:first-child,
 .header-actions {
   flex-shrink: 0;

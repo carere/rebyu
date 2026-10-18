@@ -19,6 +19,7 @@ tasks:
     deps:
       - ~:i18n
     inputs:
+      - /assets/*.svg
       - postcss/**/*
       - src/client/**/*
       - src/client-api.ts

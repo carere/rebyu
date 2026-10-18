@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-18T08:58:01.150Z",
+  "title": "Design System: Rebyu website",
+  "extensions": {
+    "colorMeta": {
+      "brand": {
+        "role": "primary",
+        "displayName": "Focus yellow",
+        "tonalRamp": [
+          "oklch(15% 0.1496 115.49)",
+          "oklch(26% 0.1496 115.49)",
+          "oklch(38% 0.1496 115.49)",
+          "oklch(49% 0.1496 115.49)",
+          "oklch(61% 0.1496 115.49)",
+          "oklch(72% 0.1496 115.49)",
+          "oklch(84% 0.1496 115.49)",
+          "oklch(95% 0.1496 115.49)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0101 260.71)",
+          "oklch(26% 0.0101 260.71)",
+          "oklch(38% 0.0101 260.71)",
+          "oklch(49% 0.0101 260.71)",
+          "oklch(61% 0.0101 260.71)",
+          "oklch(72% 0.0101 260.71)",
+          "oklch(84% 0.0101 260.71)",
+          "oklch(95% 0.0101 260.71)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "tonalRamp": [
+          "oklch(15% 0.0054 117.92)",
+          "oklch(26% 0.0054 117.92)",
+          "oklch(38% 0.0054 117.92)",
+          "oklch(49% 0.0054 117.92)",
+          "oklch(61% 0.0054 117.92)",
+          "oklch(72% 0.0054 117.92)",
+          "oklch(84% 0.0054 117.92)",
+          "oklch(95% 0.0054 117.92)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted olive gray",
+        "tonalRamp": [
+          "oklch(15% 0.0214 127.43)",
+          "oklch(26% 0.0214 127.43)",
+          "oklch(38% 0.0214 127.43)",
+          "oklch(49% 0.0214 127.43)",
+          "oklch(61% 0.0214 127.43)",
+          "oklch(72% 0.0214 127.43)",
+          "oklch(84% 0.0214 127.43)",
+          "oklch(95% 0.0214 127.43)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Divider",
+        "tonalRamp": [
+          "oklch(15% 0.0153 123.06)",
+          "oklch(26% 0.0153 123.06)",
+          "oklch(38% 0.0153 123.06)",
+          "oklch(49% 0.0153 123.06)",
+          "oklch(61% 0.0153 123.06)",
+          "oklch(72% 0.0153 123.06)",
+          "oklch(84% 0.0153 123.06)",
+          "oklch(95% 0.0153 123.06)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Olive focus",
+        "tonalRamp": [
+          "oklch(15% 0.1088 121.48)",
+          "oklch(26% 0.1088 121.48)",
+          "oklch(38% 0.1088 121.48)",
+          "oklch(49% 0.1088 121.48)",
+          "oklch(61% 0.1088 121.48)",
+          "oklch(72% 0.1088 121.48)",
+          "oklch(84% 0.1088 121.48)",
+          "oklch(95% 0.1088 121.48)"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "tonalRamp": [
+          "oklch(15% 0.0000 0.00)",
+          "oklch(26% 0.0000 0.00)",
+          "oklch(38% 0.0000 0.00)",
+          "oklch(49% 0.0000 0.00)",
+          "oklch(61% 0.0000 0.00)",
+          "oklch(72% 0.0000 0.00)",
+          "oklch(84% 0.0000 0.00)",
+          "oklch(95% 0.0000 0.00)"
+        ]
+      },
+      "review-surface": {
+        "role": "neutral",
+        "displayName": "Review paper",
+        "tonalRamp": [
+          "oklch(15% 0.0028 128.49)",
+          "oklch(26% 0.0028 128.49)",
+          "oklch(38% 0.0028 128.49)",
+          "oklch(49% 0.0028 128.49)",
+          "oklch(61% 0.0028 128.49)",
+          "oklch(72% 0.0028 128.49)",
+          "oklch(84% 0.0028 128.49)",
+          "oklch(95% 0.0028 128.49)"
+        ]
+      },
+      "install-surface": {
+        "role": "neutral",
+        "displayName": "Installation paper",
+        "tonalRamp": [
+          "oklch(15% 0.0149 119.10)",
+          "oklch(26% 0.0149 119.10)",
+          "oklch(38% 0.0149 119.10)",
+          "oklch(49% 0.0149 119.10)",
+          "oklch(61% 0.0149 119.10)",
+          "oklch(72% 0.0149 119.10)",
+          "oklch(84% 0.0149 119.10)",
+          "oklch(95% 0.0149 119.10)"
+        ]
+      },
+      "ink-hover": {
+        "role": "neutral",
+        "displayName": "Hover ink",
+        "tonalRamp": [
+          "oklch(15% 0.0137 256.76)",
+          "oklch(26% 0.0137 256.76)",
+          "oklch(38% 0.0137 256.76)",
+          "oklch(49% 0.0137 256.76)",
+          "oklch(61% 0.0137 256.76)",
+          "oklch(72% 0.0137 256.76)",
+          "oklch(84% 0.0137 256.76)",
+          "oklch(95% 0.0137 256.76)"
+        ]
+      },
+      "review-outline": {
+        "role": "primary",
+        "displayName": "Review olive",
+        "tonalRamp": [
+          "oklch(15% 0.1199 120.39)",
+          "oklch(26% 0.1199 120.39)",
+          "oklch(38% 0.1199 120.39)",
+          "oklch(49% 0.1199 120.39)",
+          "oklch(61% 0.1199 120.39)",
+          "oklch(72% 0.1199 120.39)",
+          "oklch(84% 0.1199 120.39)",
+          "oklch(95% 0.1199 120.39)"
+        ]
+      },
+      "input-line": {
+        "role": "neutral",
+        "displayName": "Field border",
+        "tonalRamp": [
+          "oklch(15% 0.0256 124.32)",
+          "oklch(26% 0.0256 124.32)",
+          "oklch(38% 0.0256 124.32)",
+          "oklch(49% 0.0256 124.32)",
+          "oklch(61% 0.0256 124.32)",
+          "oklch(72% 0.0256 124.32)",
+          "oklch(84% 0.0256 124.32)",
+          "oklch(95% 0.0256 124.32)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Primary page headline; a separate phone scale is documented in DESIGN.md."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Main section headings."
+      },
+      "title": {
+        "displayName": "Conversation title",
+        "purpose": "The compact review conversation heading."
+      },
+      "body": {
+        "displayName": "Introductory body",
+        "purpose": "Lead explanatory copy; supporting text uses smaller context-specific sizes."
+      },
+      "action": {
+        "displayName": "Primary action",
+        "purpose": "Dark call-to-action anchors."
+      },
+      "label": {
+        "displayName": "Compact action label",
+        "purpose": "The yellow note submission control."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "DM Sans lettering beside the approved Focus mark."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Scrollable installation and Vite configuration examples."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "primary-background",
+        "value": "background-color 160ms ease",
+        "purpose": "The dark primary anchor changes background on hover."
+      },
+      {
+        "name": "anchor-scroll",
+        "value": "smooth",
+        "purpose": "Root anchor scrolling; the reduced-motion query changes it to auto."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce) { :root { scroll-behavior: auto; } * { transition: none; } }",
+        "purpose": "The implemented page disables transitions and smooth scrolling when requested."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "max-1000",
+        "value": "1000px"
+      },
+      {
+        "name": "max-700",
+        "value": "700px"
+      },
+      {
+        "name": "max-370",
+        "value": "370px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "primary-link",
+      "description": "Dark anchor used for the main demo actions; its background becomes lighter ink on hover.",
+      "html": "<a class=\"ds-primary\" href=\"#demo\">Try a review <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M5 12h14m-6-6 6 6-6 6\"/></svg></a>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:space-between;gap:36px;background:var(--ink,#292c31);color:#fff;font:500 14px Onest,sans-serif;padding:16px 20px;border-radius:7px;text-decoration:none;transition:background-color 160ms ease}.ds-primary svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}.ds-primary:hover{background:#3d4249}.ds-primary:focus-visible{outline:2px solid var(--focus,#627523);outline-offset:5px;}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "Sample action target",
+      "kind": "button",
+      "refersTo": "sample-action",
+      "description": "The smaller dark sample button; hover or selection gives it a review outline.",
+      "html": "<button class=\"ds-sample-action\" type=\"button\" aria-label=\"Review the sample button\" aria-pressed=\"false\">Start a notebook <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M6 18 18 6M6 6h12v12\"/></svg></button>",
+      "css": ".ds-sample-action{position:relative;display:inline-flex;align-items:center;gap:25px;border:0;text-align:left;background:var(--ink,#292c31);color:#fff;font:12px Onest,sans-serif;padding:12px 17px;border-radius:5px;cursor:pointer}.ds-sample-action svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}.ds-sample-action:hover,.ds-sample-action[aria-pressed=\"true\"]{outline:1.5px solid #7e9236;outline-offset:5px}.ds-sample-action:focus-visible{outline:2px solid var(--focus,#627523);outline-offset:5px;}"
+    },
+    {
+      "name": "Note submission",
+      "kind": "button",
+      "refersTo": "note-submit",
+      "description": "Yellow form action, shown enabled and disabled; whitespace-only drafts remain disabled.",
+      "html": "<div class=\"ds-submit-states\"><button class=\"ds-submit\" type=\"button\">Leave a note <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M5 12h14m-6-6 6 6-6 6\"/></svg></button><button class=\"ds-submit\" type=\"button\" disabled>Leave a note <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M5 12h14m-6-6 6 6-6 6\"/></svg></button></div>",
+      "css": ".ds-submit-states{display:grid;gap:8px}.ds-submit{display:inline-flex;align-items:center;justify-content:space-between;gap:10px;min-height:38px;padding:8px 12px;font:500 12px Onest,sans-serif;border:0;border-radius:5px;color:var(--ink,#292c31);background:var(--brand,#e2f276);cursor:pointer}.ds-submit svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}.ds-submit:focus-visible{outline:2px solid var(--focus,#627523);outline-offset:5px;}.ds-submit:disabled{cursor:default;opacity:.5}"
+    },
+    {
+      "name": "Note field",
+      "kind": "input",
+      "refersTo": "note-field",
+      "description": "A labeled, vertically resizable textarea with an olive caret and keyboard focus outline.",
+      "html": "<div class=\"ds-note-field\"><label for=\"ds-message\">Your note</label><textarea id=\"ds-message\" name=\"message\" rows=\"2\" maxlength=\"2000\" placeholder=\"What would you change?\" required></textarea></div>",
+      "css": ".ds-note-field{display:grid;gap:8px;color:var(--ink,#292c31);font-family:Onest,sans-serif}.ds-note-field label{font-size:11px;font-weight:500}.ds-note-field textarea{box-sizing:border-box;width:100%;min-height:70px;resize:vertical;border:1px solid #ccd3c1;border-radius:5px;background:#fff;padding:10px 12px;font:12px/1.6 Onest,sans-serif;color:var(--ink,#292c31);caret-color:var(--focus,#627523)}.ds-note-field textarea::placeholder{color:var(--muted,#62685b)}.ds-note-field textarea:focus-visible{outline:2px solid var(--focus,#627523);outline-offset:5px;}"
+    },
+    {
+      "name": "Main navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "The Focus mark and DM Sans wordmark share an inline row with underlining text links.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main navigation\"><a class=\"ds-wordmark\" href=\"/\" aria-label=\"Rebyu home\"><svg class=\"ds-nav-mark\" aria-hidden=\"true\" viewBox=\"0 0 64 64\"><g fill=\"none\" stroke=\"currentColor\" stroke-width=\"7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M28 12H15a3 3 0 0 0-3 3v13\"/><path d=\"M36 52h13a3 3 0 0 0 3-3V36\"/></g><circle cx=\"32\" cy=\"32\" r=\"5\" fill=\"currentColor\"/></svg>rebyu</a><div class=\"ds-nav-links\"><a href=\"#demo\">Try it</a><a href=\"#install\">Get started</a><a href=\"https://github.com/carere/rebyu\">GitHub <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M6 18 18 6M6 6h12v12\"/></svg></a></div></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:80px;background:var(--brand,#e2f276);color:var(--ink,#292c31);border-bottom:1px solid #292c312b;font-family:Onest,sans-serif}.ds-wordmark{display:inline-flex;gap:8px;align-items:center;font:650 30px \"DM Sans\",sans-serif;letter-spacing:-.035em;text-decoration:none;color:inherit}.ds-nav-mark{width:32px;height:32px;flex-shrink:0}.ds-nav-links{display:flex;align-items:center;gap:32px;font-size:14px}.ds-nav-links a{display:inline-flex;align-items:center;gap:4px;color:inherit;text-decoration:none;text-underline-offset:4px}.ds-nav-links svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}.ds-nav-links a:hover{text-decoration:underline}.ds-nav a:focus-visible{outline:2px solid var(--focus,#627523);outline-offset:5px;}@media(max-width:700px){.ds-nav{min-height:76px;gap:16px}.ds-wordmark{font-size:26px;gap:4px}.ds-nav-mark{width:28px;height:28px}.ds-nav-links{gap:16px;font-size:12px}}@media(max-width:370px){.ds-nav-links{gap:11px}}"
+    },
+    {
+      "name": "Review comment",
+      "kind": "card",
+      "refersTo": "comment",
+      "description": "A plain bordered note with muted attribution and an underlined Resolve control.",
+      "html": "<article class=\"ds-comment\"><p>Could this heading have a little more breathing room?</p><footer><span>Sam · example comment</span><button type=\"button\" aria-label=\"Resolve example comment 1\">Resolve</button></footer></article>",
+      "css": ".ds-comment{font:12px Onest,sans-serif;color:var(--ink,#292c31);padding:12px;border:1px solid var(--line,#dfe3d8);border-radius:6px;background:#fff}.ds-comment p{margin:0;line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap}.ds-comment footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;font-size:10px;color:var(--muted,#62685b)}.ds-comment button{border:0;padding:3px 0;background:transparent;color:var(--muted,#62685b);font:10px Onest,sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}.ds-comment button:focus-visible{outline:2px solid var(--focus,#627523);outline-offset:5px;}"
+    },
+    {
+      "name": "Selected heading and pin",
+      "kind": "custom",
+      "refersTo": "review-heading",
+      "description": "The selected sample heading shows the review outline and an open-note number.",
+      "html": "<div class=\"ds-heading-preview\"><h2 class=\"ds-sample-heading\"><button class=\"ds-review-heading\" type=\"button\" aria-label=\"Review the sample heading\" aria-pressed=\"true\" data-pin=\"1\">A small place<br>for good ideas.</button></h2></div>",
+      "css": ".ds-heading-preview{padding:24px}.ds-sample-heading{margin:0;font:550 clamp(32px,3.3vw,46px)/1.12 Onest,sans-serif;letter-spacing:-.035em;color:var(--ink,#292c31)}.ds-review-heading{position:relative;border:0;text-align:left;color:inherit;padding:5px 8px 7px;margin-left:-8px;font:inherit;line-height:inherit;letter-spacing:inherit;background:transparent;cursor:pointer}.ds-review-heading:hover,.ds-review-heading[aria-pressed=\"true\"]{outline:1.5px solid #7e9236;outline-offset:5px}.ds-review-heading[data-pin]::after{content:attr(data-pin);position:absolute;right:-15px;top:-17px;width:23px;height:23px;border-radius:50%;background:var(--brand,#e2f276);color:var(--ink,#292c31);display:grid;place-items:center;font:500 11px Onest,sans-serif;letter-spacing:normal;z-index:1}.ds-review-heading:focus-visible{outline:2px solid var(--focus,#627523);outline-offset:5px;}@media(max-width:700px){.ds-sample-heading{font-size:clamp(32px,7vw,42px)}}"
+    },
+    {
+      "name": "Sample note target",
+      "kind": "custom",
+      "refersTo": "sample-note",
+      "description": "The sample note is an open, top-ruled review target, with the same hover and selection outline.",
+      "html": "<button class=\"ds-sample-note\" type=\"button\" aria-label=\"Review the sample note card\" aria-pressed=\"false\"><span class=\"ds-sample-note-title\">Leave room for the unexpected.</span><span class=\"ds-sample-note-copy\">The best ideas usually start as something smaller.</span><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M6 18 18 6M6 6h12v12\"/></svg></button>",
+      "css": ".ds-sample-note{box-sizing:border-box;position:relative;display:grid;gap:6px;width:100%;padding:17px 32px 16px 0;border:0;border-top:1px solid var(--line,#dfe3d8);background:transparent;text-align:left;color:var(--ink,#292c31);font-family:Onest,sans-serif;cursor:pointer}.ds-sample-note-title{font-size:15px;font-weight:550;letter-spacing:-.02em}.ds-sample-note-copy{font-size:11px;line-height:1.5;color:var(--muted,#62685b)}.ds-sample-note svg{position:absolute;right:1px;top:18px;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}.ds-sample-note:hover,.ds-sample-note[aria-pressed=\"true\"]{outline:1.5px solid #7e9236;outline-offset:5px}.ds-sample-note:focus-visible{outline:2px solid var(--focus,#627523);outline-offset:5px;}"
+    },
+    {
+      "name": "Installation code panel",
+      "kind": "card",
+      "refersTo": "install-code",
+      "description": "A flat white panel groups the command, configuration, copy controls, and production-exclusion footnote.",
+      "html": "<section class=\"ds-code-panel\" aria-label=\"Installation example\"><div class=\"ds-code-label\"><span>Install after the first npm release</span><button type=\"button\" aria-label=\"Copy install command\">Copy</button></div><pre><code>npm install -D vite-plugin-rebyu</code></pre><div class=\"ds-code-label ds-code-config\"><span>vite.config.ts</span><button type=\"button\" aria-label=\"Copy Vite configuration\">Copy</button></div><pre><code><span class=\"ds-syntax-muted\">import</span> { defineConfig } <span class=\"ds-syntax-muted\">from</span> <span class=\"ds-syntax-string\">\"vite\"</span>;\n<span class=\"ds-syntax-muted\">import</span> rebyu <span class=\"ds-syntax-muted\">from</span> <span class=\"ds-syntax-string\">\"vite-plugin-rebyu\"</span>;\n\n<span class=\"ds-syntax-muted\">export default</span> defineConfig({\n  plugins: [rebyu()],\n});</code></pre><p class=\"ds-code-footnote\">Development only. Rebyu is excluded from production builds.</p></section>",
+      "css": ".ds-code-panel{min-width:0;background:#fff;color:var(--ink,#292c31);border-radius:10px;overflow:hidden;font-family:Onest,sans-serif}.ds-code-label{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:48px;padding:13px 22px;font-size:11px;color:var(--muted,#62685b)}.ds-code-label button{background:transparent;border:0;color:var(--ink,#292c31);font:11px Onest,sans-serif;padding:3px 0;min-width:40px;text-align:right;cursor:pointer}.ds-code-label button:focus-visible{outline:2px solid var(--focus,#627523);outline-offset:5px;}.ds-code-panel pre{margin:0;padding:2px 22px 23px;font-size:12px;line-height:1.9;overflow-x:auto;scrollbar-color:#b7c19b transparent}.ds-code-panel code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.ds-code-config{border-top:1px solid var(--line,#dfe3d8)}.ds-syntax-muted{color:#667454}.ds-syntax-string{color:#536b15}.ds-code-footnote{margin:0;font-size:10px;line-height:1.7;padding:14px 22px;border-top:1px solid var(--line,#dfe3d8);color:var(--muted,#62685b)}@media(max-width:700px){.ds-code-panel pre{font-size:10px;padding-inline:16px}.ds-code-label,.ds-code-footnote{padding-inline:16px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Working review sheet",
+    "overview": "This documents the implemented working proposal, not a final website direction\napproved by the user. The approved commitments are the Focus mark, yellow and ink\nidentity, a code-first working page, and an interactive, disposable browser-local\nexample. The name above describes the current proposal rather than a separately\napproved creative concept.\n\nThe current site uses broad light surfaces, close-set sans-serif headings, thin\ndividers, and compact controls. Numbered pins and an adjacent conversation make\nthe review mechanism visible. This website system is independent of the plugin's\nwidget design system; the home composition remains in\n[the surface brief](.impeccable/surfaces/home.md).",
+    "keyCharacteristics": [
+      "Approved Focus identity in yellow and ink.",
+      "Flat light surfaces separated by tone and fine rules.",
+      "Onest content typography with a DM Sans wordmark.",
+      "Visible selection outlines, numbered pins, and compact note controls."
+    ],
+    "rules": [
+      {
+        "name": "The Focus Identity Rule",
+        "body": "Keep the approved Focus mark and yellow-and-ink identity.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat Surface Rule",
+        "body": "Use tone, borders, and outlines for the current proposal's depth.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Context Rule",
+        "body": "Show the selected target with an outline and attach its open-note number to the target.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do reuse the approved Focus artwork and the yellow-and-ink identity.",
+      "Do preserve visible keyboard focus and reduced-motion behavior.",
+      "Do keep selection outlines and numbered pins tied to the review target.",
+      "Do use the existing flat surfaces and compact control corners."
+    ],
+    "donts": [
+      "Don't present this working proposal as a user-approved final visual direction.",
+      "Don't treat the website's tokens as the plugin widget's design system.",
+      "Don't add shadows or animated lifting to the current component vocabulary.",
+      "Don't imply that the illustrative notes persist or are shared with other visitors."
+    ]
+  }
+}

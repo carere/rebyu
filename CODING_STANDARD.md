@@ -9,7 +9,7 @@ Adapted from Delimoov at `cf8c799826882c7030f1c0aecef0e26a28200f93`.
 - Rebyu has one review domain; read `docs/context/root.md` for its vocabulary.
   Keep domain boundaries inside projects; do not create packages for each concept.
 - The plugin owns its HTTP API, persistence, annotation behavior, and isolated widget.
-  The playground is a consumer and demonstration surface, not production plugin logic.
+  The website is a consumer and demonstration surface, not production plugin logic.
 - Current small-project layout: Node integration lives in the plugin's `src/`, the
   widget in `src/client/`, and vendored Zaidan primitives in `src/client/components/ui/`.
   Keep rendering, browser event handling, HTTP routing, and persistence in separate modules.
@@ -24,7 +24,7 @@ Adapted from Delimoov at `cf8c799826882c7030f1c0aecef0e26a28200f93`.
   deeper project-local aliases, use `package.json` subpath imports (`#...`); do not
   duplicate mappings in TypeScript paths or Vite aliases. Avoid barrel files, apart
   from the package's explicit public export surface.
-- The playground seed script intentionally uses the source file store to prepare local
+- The website seed script intentionally uses the source file store to prepare local
   fixtures before the dev server starts. Do not expose that helper in the published API.
 
 ## Frontend components

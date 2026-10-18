@@ -26,8 +26,9 @@ host application's frontend framework and requires no host UI or stylesheet setu
 The current release targets trusted development servers and excludes the widget
 and API from production builds and Vite preview.
 
-The playground in `../../apps/playground` demonstrates reviews across Home, Work,
-and About. It is a consumer of this package, not the product UI itself.
+The website in `../../apps/website` explains integration and contains a browser-local
+review example. Its `tests/fixtures` folder retains a three-page host for regression
+testing the real widget. The website is a consumer, not production plugin logic.
 
 ## Capabilities and Constraints
 
@@ -64,8 +65,8 @@ space without helping a reviewer act.
 
 - `README.md` documents package integration and current behavior.
 - `../../docs/context/root.md` defines review-domain terminology.
-- `../../apps/playground` contains a three-page demonstration and optional sample
-  reviews. Sample reviews are demonstration content, not customer evidence.
+- `../../apps/website` contains the public site, a browser-local example, and
+  three-page browser-test fixtures. Example reviews are not customer evidence.
 - `../../assets/icon.svg` is the existing repository icon.
 - `THIRD_PARTY_LICENSES.md` records Zaidan provenance and integration adaptations.
 
@@ -80,5 +81,5 @@ space without helping a reviewer act.
 
 ## Open Decisions
 
-The timing and scope of production hosting, authentication, integrations, and
-publishing are not yet decided. No WCAG conformance level has been established.
+The public website targets Cloudflare Workers at `rebyu.carere.dev`. Production
+hosting for the review plugin itself, authentication, and integrations remain open. No WCAG conformance level has been established.

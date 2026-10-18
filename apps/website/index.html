@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#e2f276" />
+    <meta name="description" content="Point at an element, leave a note, and review your Vite website together. Rebyu keeps visual feedback connected to the interface." />
+    <link rel="canonical" href="https://rebyu.carere.dev/" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <title>Rebyu — show them what you mean.</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="site-nav page-width" aria-label="Main navigation">
+        <a class="wordmark" href="/" aria-label="Rebyu home"><img src="/mark.svg" width="32" height="32" alt="" />rebyu</a>
+        <div class="nav-links"><a href="#demo">Try it</a><a href="#install">Get started</a><a href="https://github.com/carere/rebyu">GitHub <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="page-width">
+          <div class="hero-intro">
+            <h1 id="hero-heading">Show them<br />what you mean.</h1>
+            <div class="hero-copy"><p>Select something on your Vite website, leave a note, and keep the conversation right there.</p><a class="primary-link" href="#demo">Try a review <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a></div>
+          </div>
+          <div class="demo-intro" id="demo"><p>Go on. Pick something you would change.</p><span>Interactive example · only in this tab</span></div>
+          <section class="review-demo" aria-label="Interactive review example">
+            <div class="demo-bar"><span><span class="demo-dot" aria-hidden="true"></span>example.local</span><button id="reset-demo" type="button">Reset demo <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 9M3 4v6h6" /></svg></button></div>
+            <div class="demo-body">
+              <div class="sample-page">
+                <div class="sample-nav"><span>fieldnotes<span class="sample-period">.</span></span><span>A sample website</span></div>
+                <h2 class="sample-heading"><button class="reviewable" type="button" data-review-target="heading" aria-label="Review the sample heading" aria-pressed="true">A small place<br />for good ideas.</button></h2>
+                <p class="sample-description">Notes, half-formed thoughts, and things worth coming back to. Make a little room for them.</p>
+                <button class="sample-action reviewable" type="button" data-review-target="button" aria-label="Review the sample button" aria-pressed="false">Start a notebook <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12" /></svg></button>
+                <button class="sample-note reviewable" type="button" data-review-target="card" aria-label="Review the sample note card" aria-pressed="false"><span class="sample-note-title">Leave room for the unexpected.</span><span class="sample-note-copy">The best ideas usually start as something smaller.</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12" /></svg></button>
+                <p class="sample-hint">Select the heading, button, or note card to review it.</p>
+              </div>
+              <aside class="demo-review" aria-label="Sample review conversation">
+                <div class="demo-review-brand"><img src="/icon.svg" width="26" height="26" alt="" /><span>rebyu</span><span class="demo-review-path">/ example</span></div>
+                <div class="demo-review-content"><h3>Let’s make it better.</h3><div class="demo-selection"><span>Selected</span><strong id="selected-target">Heading</strong></div><ol id="demo-comments" class="demo-comments" aria-label="Example comments"></ol><form id="review-form"><label for="demo-message">Your note</label><textarea id="demo-message" name="message" rows="2" maxlength="2000" placeholder="What would you change?" required></textarea><button class="note-submit" type="submit" disabled>Leave a note <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></button></form><p class="demo-local-note">This is a local example. Your notes stay in this tab.</p></div>
+                <div class="demo-review-footer"><span id="demo-count">1 open sample note</span><span id="demo-status" class="sr-only" role="status" aria-live="polite"></span></div>
+              </aside>
+            </div>
+          </section>
+        </div>
+      </section>
+      <section class="details-section page-width" aria-labelledby="details-heading">
+        <div class="details-intro"><h2 id="details-heading">Less describing.<br />More understanding.</h2><p>The screenshot in a chat. The arrow in a document. The “no, the other button.” Rebyu gives that conversation a place on the page.</p></div>
+        <div class="feature-lines"><article><h3>Point to the detail.</h3><p>Select an element, draw around an area, or sketch freehand. Numbered pins connect the note to its place.</p></article><article><h3>Keep the whole conversation.</h3><p>Reply, filter by page or person, and resolve the note when the detail is right. Reviews stay together across your pages.</p></article><article><h3>Make yourself at home.</h3><p>Bring your own framework. The widget carries its own UI, styles, and English and French translations.</p></article></div>
+      </section>
+      <section class="install-section" id="install" aria-labelledby="install-heading">
+        <div class="page-width install-layout"><div class="install-copy"><h2 id="install-heading">One plugin.<br />Your website.</h2><p>Add Rebyu alongside your existing Vite plugins. Open your development server and start the conversation.</p><p class="release-note">The first npm release is being prepared. Until then, <a href="https://github.com/carere/rebyu#add-to-a-vite-project">build and install from source</a>.</p><a class="text-link" href="https://github.com/carere/rebyu#options">Read the configuration guide <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 18 18 6M6 6h12v12" /></svg></a></div><div class="install-code"><div class="code-label"><span>Install after the first npm release</span><button type="button" data-copy="install-command" aria-label="Copy install command">Copy</button></div><pre><code id="install-command">npm install -D vite-plugin-rebyu</code></pre><div class="code-label config-label"><span>vite.config.ts</span><button type="button" data-copy="vite-example" aria-label="Copy Vite configuration">Copy</button></div><pre><code id="vite-example"><span class="syntax-muted">import</span> { defineConfig } <span class="syntax-muted">from</span> <span class="syntax-string">"vite"</span>;
+<span class="syntax-muted">import</span> rebyu <span class="syntax-muted">from</span> <span class="syntax-string">"vite-plugin-rebyu"</span>;
+
+<span class="syntax-muted">export default</span> defineConfig({
+  plugins: [rebyu()],
+});</code></pre><p class="code-footnote">Development only. Rebyu is excluded from production builds.</p><span id="copy-status" class="sr-only" role="status" aria-live="polite"></span></div></div>
+      </section>
+      <section class="closing-section page-width"><img src="/mark.svg" width="64" height="64" alt="" /><h2>A second pair of eyes.<br />Right where you need them.</h2><a class="primary-link" href="#demo">Give it another look <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6" /></svg></a></section>
+    </main>
+    <footer class="site-footer page-width"><a class="wordmark" href="/" aria-label="Rebyu home"><img src="/mark.svg" width="28" height="28" alt="" />rebyu</a><p>A Vite plugin by <a href="https://github.com/carere">Kevin Abatan</a>.</p><div><a href="https://github.com/carere/rebyu/blob/main/LICENSE">MIT license</a><a href="https://zaidan.carere.dev">Widget built with Zaidan</a></div></footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

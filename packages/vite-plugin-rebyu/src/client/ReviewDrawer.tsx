@@ -1,9 +1,9 @@
 import { Moon, RotateCcw, Sun, X } from "lucide-solid";
 import { createEffect, createSignal, onCleanup, Show } from "solid-js";
 import { m } from "#i18n/messages";
+import rebyuIcon from "../../../../assets/icon.svg?inline";
 import type { ReviewModel } from "./App";
 import { Alert, AlertAction, AlertDescription } from "./components/ui/alert";
-import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "./components/ui/drawer";
 import { ReviewComposer } from "./ReviewComposer";
@@ -71,7 +71,7 @@ export function ReviewDrawer(input: { model: ReviewModel }) {
       >
         <DrawerHeader class="drawer-header">
           <div class="drawer-brand">
-            <Badge>r↗</Badge>
+            <img class="brand-icon" src={rebyuIcon} width="28" height="28" alt="" />
             <DrawerTitle class="drawer-title">
               <span>rebyu</span>
               <span class="project-separator" aria-hidden="true" />

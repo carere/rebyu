@@ -35,8 +35,8 @@ jobs:
         run: bun sort-package-json --check package.json 'apps/*/package.json' 'packages/*/package.json'
       - name: Check formatting, lint rules, and imports
         run: bun biome check . --error-on-warnings
-      - name: Build the Vite plugin and playground
-        run: moon run vite-plugin-rebyu:build playground:build
+      - name: Build the Vite plugin and website
+        run: moon run vite-plugin-rebyu:build website:build
       - name: Check TypeScript types
         run: bun tsc --noEmit
       - name: Check unused code and dependencies
@@ -46,7 +46,7 @@ jobs:
       - name: Install Chromium and browser test system dependencies
         working-directory: packages/vite-plugin-rebyu
         run: bunx --bun playwright install --with-deps chromium
-      - name: Run widget browser regression tests
-        run: moon run vite-plugin-rebyu:test-browser
+      - name: Run widget and website browser regression tests
+        run: moon run vite-plugin-rebyu:test-browser website:test-browser
       - name: Verify checks left tracked files unchanged
         run: git diff --exit-code
