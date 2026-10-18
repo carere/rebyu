@@ -31,6 +31,8 @@ tasks:
     preset: utility
     options:
       cache: false
+      interactive: false
+      runInCI: true
   deploy-check:
     command: wrangler deploy --dry-run --outdir ../../.moon/cache/cloudflare/website
     deps:
