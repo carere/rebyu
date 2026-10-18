@@ -49,16 +49,16 @@ nav {
   justify-content: space-between;
 }
 .wordmark {
+  gap: 8px;
+  color: #292c31;
   font-size: 31px;
-  letter-spacing: -2px;
-  font-weight: 700;
+  letter-spacing: -0.035em;
+  font-weight: 650;
   display: flex;
   align-items: center;
 }
-.wordmark > span {
-  font-size: 24px;
-  margin-left: 2px;
-  margin-top: -12px;
+.wordmark > img {
+  flex-shrink: 0;
 }
 .nav-links {
   display: flex;
@@ -66,14 +66,14 @@ nav {
   font-size: 12px;
   color: #73796d;
 }
-.playground-label {
+.website-label {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 9px;
   letter-spacing: 1.4px;
 }
-.playground-label > span {
+.website-label > span {
   height: 5px;
   width: 5px;
   border-radius: 50%;
@@ -637,8 +637,9 @@ footer {
 footer .wordmark {
   font-size: 24px;
 }
-footer .wordmark span {
-  font-size: 20px;
+footer .wordmark img {
+  width: 28px;
+  height: 28px;
 }
 footer > span {
   font-size: 6px;
@@ -690,7 +691,7 @@ footer > span {
   .nav-links {
     gap: 22px;
   }
-  .playground-label {
+  .website-label {
     font-size: 7px;
   }
 }
@@ -969,7 +970,7 @@ footer > a:last-child:not(.wordmark) {
     gap: 18px;
     font-size: 11px;
   }
-  .playground-label {
+  .website-label {
     display: none;
   }
   .page-intro {

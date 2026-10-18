@@ -12,7 +12,7 @@ Baseline researched on 2026-10-16 from [SitePing](https://siteping.dev/), its [r
 - File-backed shared comments; atomic writes, validation, serialized mutations, retry-safe creation and replies, durable new-comment outbox.
 - Opt-in viewport screenshots excluding form controls and ignored subtrees. Optional uncaught error / rejected promise diagnostics.
 - Light/dark themes, responsive drawer, accessible names, keyboard element selection, inbox navigation shortcuts, and reduced-motion styles.
-- Three-page vanilla Vite playground with eight optional seeded reviews, proving that the host application does not need SolidJS.
+- Three-page vanilla Vite website with eight optional seeded reviews, proving that the host application does not need SolidJS.
 
 ## Remaining before SitePing parity
 

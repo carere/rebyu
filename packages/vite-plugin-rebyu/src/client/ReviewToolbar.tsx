@@ -11,6 +11,7 @@ import {
 } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
 import { m } from "#i18n/messages";
+import rebyuMark from "../../../../assets/mark.svg?inline";
 import type { ReviewModel } from "./App";
 import { Badge } from "./components/ui/badge";
 import { Button, type ButtonProps } from "./components/ui/button";
@@ -73,7 +74,10 @@ export function ReviewToolbar(input: { model: ReviewModel }) {
             aria-label={expanded() ? m.review_close_tools() : m.review_open_tools()}
             aria-describedby="rebyu-unread-status"
           >
-            <Show when={expanded()} fallback={<MessageCircle size={23} />}>
+            <Show
+              when={expanded()}
+              fallback={<img src={rebyuMark} width="28" height="28" alt="" />}
+            >
               <X size={24} />
             </Show>
             <Show when={unreadCount() > 0}>

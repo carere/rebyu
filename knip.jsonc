@@ -3,12 +3,17 @@
   "includeEntryExports": true,
   "workspaces": {
     ".": {
-      "entry": ["scripts/check-pr-body.ts"],
+      "entry": [
+        "scripts/check-pr-body.ts",
+        "scripts/check-release.ts",
+        "scripts/set-release-version.ts"
+      ],
       "project": ["scripts/**/*.ts"]
     },
-    "apps/playground": {
+    "apps/website": {
       "entry": ["scripts/seed.ts"],
-      "project": ["src/**/*.ts", "*.ts", "scripts/**/*.ts"],
+      "project": ["src/**/*.ts", "*.ts", "scripts/**/*.ts", "tests/**/*.ts"],
+      "ignoreDependencies": ["wrangler"],
       "includeEntryExports": false
     },
     "packages/vite-plugin-rebyu": {

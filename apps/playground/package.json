@@ -1,9 +1,0 @@
-{
-  "name": "@rebyu/playground",
-  "private": true,
-  "type": "module",
-  "devDependencies": {
-    "vite": "^7.1.0",
-    "vite-plugin-rebyu": "workspace:*"
-  }
-}

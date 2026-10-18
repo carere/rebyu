@@ -1,5 +1,5 @@
 $schema: ../../.moon/cache/schemas/project.json
-id: playground
+id: website
 language: typescript
 stack: frontend
 tasks:
@@ -16,6 +16,7 @@ tasks:
       - src/**/*
       - index.html
       - vite.config.ts
+      - /assets/**/*
     outputs:
       - dist
   preview:
@@ -23,8 +24,28 @@ tasks:
     deps:
       - ~:build
     preset: server
+  deploy:
+    command: wrangler deploy
+    deps:
+      - ~:build
+    preset: utility
+    options:
+      cache: false
+  deploy-check:
+    command: wrangler deploy --dry-run --outdir ../../.moon/cache/cloudflare/website
+    deps:
+      - ~:build
+    preset: utility
+    options:
+      cache: false
   seed:
     command: bun scripts/seed.ts
     preset: utility
+    options:
+      cache: false
+  test-browser:
+    command: playwright test
+    deps:
+      - ~:build
     options:
       cache: false

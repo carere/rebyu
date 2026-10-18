@@ -18,12 +18,14 @@ proto install
 bun install --frozen-lockfile
 bun lefthook install
 bun moon sync
-bun moon run playground:seed # optional: eight sample reviews, existing reviews preserved
-bun moon run playground:dev
+bun moon run website:seed # optional: eight sample reviews, existing reviews preserved
+bun moon run website:dev
 ```
 
-Open http://localhost:5173. Explore Home (`/`), Work (`/work`), and About (`/about`).
-The playground is a vanilla TypeScript Vite app: the host does not need SolidJS,
+Open http://localhost:5173 for the website. Its public review example runs entirely
+in the browser; the real review widget is also available during development.
+`website:preview` serves the production site without the development widget.
+The website is a vanilla TypeScript Vite app targeting `rebyu.carere.dev`: the host does not need SolidJS,
 Zaidan, Tailwind, or component imports. The plugin bundles its runtime and styles.
 Run seed before the dev server starts so a single process owns the review file.
 
@@ -37,7 +39,7 @@ client before its Node entry. Builds declare outputs for Moon's local cache. Tes
 and seed tasks are not cached.
 
 ```sh
-bun moon run vite-plugin-rebyu:build playground:build
+bun moon run vite-plugin-rebyu:build website:build
 bun tsc --noEmit
 bun biome check . --error-on-warnings
 bun knip
@@ -46,7 +48,7 @@ bun moon run vite-plugin-rebyu:test-unit vite-plugin-rebyu:test-integration
 cd packages/vite-plugin-rebyu
 bunx --bun playwright install chromium # once
 cd ../..
-bun moon run vite-plugin-rebyu:test-browser
+bun moon run vite-plugin-rebyu:test-browser website:test-browser
 cog check --ignore-merge-commits
 ```
 
@@ -60,7 +62,10 @@ on pull requests and pushes to main. PR metadata checks Conventional Commits, ti
 and the body template from `.agents/skills/pr/SKILL.md`. Its validator checks structure
 and placeholders, not the truth of evidence. UI PRs require video evidence per the
 skill. All workflows use standard GitHub runners and the pinned proto setup action;
-there is no deployment configuration or project-specific remote cache.
+there is no project-specific remote cache. The website uses Cloudflare Workers static assets;
+see [website hosting](docs/website-hosting.md). After the first local npm release, run
+**Actions → Release to npm → Run workflow** on `main` to open a release PR. Merging
+that PR tags, tests, and publishes the next version. See [the release guide](docs/releases.md).
 
 Add Zaidan components through the CLI using the package's `components.json`:
 
@@ -117,7 +122,13 @@ browser tests cover switching, draft preservation, filters, and persisted prefer
 
 ## Add to a Vite project
 
-The package has not been published. Build and pack it from this repository:
+Once the first release is published, install it from npm:
+
+```sh
+npm install -D vite-plugin-rebyu
+```
+
+To try an unpublished build, build and pack it from this repository:
 
 ```sh
 bun moon run vite-plugin-rebyu:build
@@ -225,9 +236,9 @@ unused-code checks, and agent conventions are adapted from Delimoov at `cf8c799`
 The review domain is shared by both projects; package count does not imply separate domains.
 
 - `packages/vite-plugin-rebyu`: Node plugin, file store, contracts, and isolated SolidJS widget.
-- `apps/playground`: a vanilla Vite host for development and manual review testing.
+- `apps/website`: the public website, disposable review demo, and development host.
 - `docs/siteping-parity.md`: implemented scope, limitations, and next milestones.
 
-[Zaidan](https://zaidan.carere.dev) primitives and Mira styles are vendored from its registry, with Shadow DOM portal and theme scoping. Rebyu defines no custom animation keyframes; CSS in `styles/reviews.css` is limited to review composition and annotation geometry. See [third-party notices](packages/vite-plugin-rebyu/THIRD_PARTY_LICENSES.md). The widget has no external font or analytics requests; the playground loads demonstration fonts from Google Fonts.
+[Zaidan](https://zaidan.carere.dev) primitives and Mira styles are vendored from its registry, with Shadow DOM portal and theme scoping. Rebyu defines no custom animation keyframes; CSS in `styles/reviews.css` is limited to review composition and annotation geometry. See [third-party notices](packages/vite-plugin-rebyu/THIRD_PARTY_LICENSES.md). The widget has no external font or analytics requests; the website self-hosts its fonts. The old three-page host remains a browser-test fixture.
 
 MIT · Kevin Abatan

@@ -1,8 +1,12 @@
-import "./style.css";
+import "./site.css";
+import rebyuIcon from "../../../../assets/icon.svg";
+import rebyuMark from "../../../../assets/mark.svg";
+
+const wordmark = `<a class="wordmark" href="/"><img src="${rebyuMark}" width="36" height="36" alt="" />rebyu</a>`;
 
 const home = `
 <div class="site-shell">
-<nav><a class="wordmark" href="/">rebyu<span>↗</span></a><div class="nav-links"><a href="/" aria-current="page">Home</a><a href="/work">Work</a><a href="/about">About</a></div><span class="playground-label"><span></span> THE PLAYGROUND</span></nav>
+<nav>${wordmark}<div class="nav-links"><a href="/" aria-current="page">Home</a><a href="/work">Work</a><a href="/about">About</a></div><span class="website-label"><span></span> THE WEBSITE</span></nav>
 <main>
 <section class="hero"><div class="edition"><span class="tiny-star">✳</span> MADE FOR THE FINISHING TOUCHES <span class="edition-line"></span> 001</div>
 <div class="hero-layout"><div class="hero-copy"><h1 id="home-heading">A little perspective<br/>changes <em>everything.</em></h1><p>Great websites are made together. Turn a passing thought into a thoughtful conversation — right on the page.</p><div class="hero-actions"><button id="try-review">Take a closer look <span>↗</span></button><a href="#how-it-works">Find your flow <span>↓</span></a></div><div class="hero-footnote"><span class="mini-avatars"><i>KA</i><i>AM</i><i>JL</i></span><p>For the people who notice the little things.</p></div></div>
@@ -15,26 +19,31 @@ const home = `
   plugins: [<span class="code-call">rebyu</span>()],
 });</pre><p><span></span> A small addition. A better conversation.</p></div></section>
 <section class="closing"><p>Nothing great was made<br/>without a little <em>back and forth.</em></p><a href="#">Here’s to the next iteration. ↗</a></section>
-</main><footer><a class="wordmark" href="/">rebyu<span>↗</span></a><span>BUILT WITH SOLIDJS + ZAIDAN</span><span>A WORK IN PROGRESS. JUST LIKE THE GOOD STUFF.</span></footer></div>`;
+</main><footer>${wordmark}<span>BUILT WITH SOLIDJS + ZAIDAN</span><span>A WORK IN PROGRESS. JUST LIKE THE GOOD STUFF.</span></footer></div>`;
 const nav = (page: string) =>
-  `<nav><a class="wordmark" href="/">rebyu<span>↗</span></a><div class="nav-links"><a href="/">Home</a><a href="/work" ${page === "work" ? 'aria-current="page"' : ""}>Work</a><a href="/about" ${page === "about" ? 'aria-current="page"' : ""}>About</a></div><span class="playground-label"><span></span> THE PLAYGROUND</span></nav>`;
-const footer = `<footer><a class="wordmark" href="/">rebyu<span>↗</span></a><span>BUILT WITH SOLIDJS + ZAIDAN</span><a href="/">Back to the beginning ↗</a></footer>`;
+  `<nav>${wordmark}<div class="nav-links"><a href="/">Home</a><a href="/work" ${page === "work" ? 'aria-current="page"' : ""}>Work</a><a href="/about" ${page === "about" ? 'aria-current="page"' : ""}>About</a></div><span class="website-label"><span></span> THE WEBSITE</span></nav>`;
+const footer = `<footer>${wordmark}<span>BUILT WITH SOLIDJS + ZAIDAN</span><a href="/">Back to the beginning ↗</a></footer>`;
 const work = `<div class="site-shell">${nav("work")}<main class="inner-page"><section class="page-intro"><p class="eyebrow">A FEW THINGS WE’VE MADE BETTER</p><h1 id="work-heading">Thoughtful work.<br/><em>Room to grow.</em></h1><p>A collection of small details that came together to make something worth a second look.</p></section><div class="project-grid"><article class="project-card" id="work-atlas"><div class="project-cover atlas-cover"><span>ATLAS</span><i>A quieter kind<br/>of adventure.</i><small>FIND YOUR NEXT SOMEWHERE ↗</small></div><div class="project-caption"><h2>Atlas, a travel journal</h2><span>BRAND + WEB · 2026</span></div><p>A home for the places you’ve been, and the ones you haven’t found yet.</p></article><article class="project-card" id="work-form"><div class="project-cover form-cover"><span>form<span class="form-dot">.</span></span><i>Less noise.<br/>More intention.</i><small>OBJECTS FOR EVERYDAY LIVING ↗</small></div><div class="project-caption"><h2>Form, everyday objects</h2><span>COMMERCE · 2026</span></div><p>Simple things, considered carefully. An online shop with a little room to breathe.</p></article></div><section class="page-callout" id="work-cta"><span class="tiny-star">✳</span><h2>The next good idea<br/>could be <em>yours.</em></h2><a class="page-button" href="/about#about-contact">Let’s talk about it ↗</a></section></main>${footer}</div>`;
 const about = `<div class="site-shell">${nav("about")}<main class="inner-page"><section class="page-intro"><p class="eyebrow">A SMALL STUDIO. A SHARED POINT OF VIEW.</p><h1 id="about-heading">Made with care.<br/><em>Better together.</em></h1><p>We’re a small team of curious people who believe the best work happens when everyone gets a say.</p></section><section class="about-story"><div class="studio-art"><span>GOOD<br/>THINGS<br/><em>TAKE CARE.</em></span><i>✳</i><small>AN INDEPENDENT DESIGN STUDIO</small></div><div><p class="eyebrow">THE WAY WE SEE IT</p><h2>Details aren’t the little things.<br/>They’re the whole thing.</h2><p>We build websites with people, for people. That means asking questions, leaving room for feedback, and taking the time to get the feeling right.</p><p>From the first sketch to the last line of copy, we’re here for the back and forth that makes a good idea great.</p></div></section><section class="values-grid" id="about-values"><article><span>01 /</span><h3>Stay curious.</h3><p>Ask one more question. Take another look. There’s usually something good waiting there.</p></article><article><span>02 /</span><h3>Make room.</h3><p>For another voice, a different perspective, and the idea that changes everything.</p></article><article><span>03 /</span><h3>Care a little more.</h3><p>About the words, the spacing, the way it feels. Especially the things no one asked you to notice.</p></article></section><section class="page-callout" id="about-contact"><p class="eyebrow">EVERY GOOD THING STARTS SOMEWHERE</p><h2>Have something<br/><em>on your mind?</em></h2><a class="page-button" href="mailto:hello@example.com">Say hello ↗</a><p class="demo-caption">A sample contact section for your review.</p></section></main>${footer}</div>`;
 const pages: Record<string, { html: string; title: string }> = {
   "/": { html: home, title: "Rebyu — a little perspective changes everything" },
-  "/work": { html: work, title: "Work — Rebyu playground" },
-  "/about": { html: about, title: "About — Rebyu playground" },
+  "/work": { html: work, title: "Work — Rebyu website" },
+  "/about": { html: about, title: "About — Rebyu website" },
 };
 const page = pages[location.pathname.replace(/\/$/, "") || "/"] ?? pages["/"];
-let root = document.getElementById("playground-root");
+let root = document.getElementById("website-root");
 if (!root) {
   root = document.createElement("div");
-  root.id = "playground-root";
+  root.id = "website-root";
   document.body.prepend(root);
 }
 root.innerHTML = page.html;
 document.title = page.title;
+const favicon = document.createElement("link");
+favicon.rel = "icon";
+favicon.type = "image/svg+xml";
+favicon.href = rebyuIcon;
+document.head.append(favicon);
 document.querySelector("#try-review")?.addEventListener("click", () => {
   const widget = document.getElementById("rebyu-widget")?.shadowRoot;
   (widget?.querySelector('[aria-label="Open review tools"]') as HTMLButtonElement)?.click();

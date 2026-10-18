@@ -12,8 +12,8 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "bunx --bun vite --host 127.0.0.1 --port 5199 --strictPort",
-    cwd: fileURLToPath(new URL("../../apps/playground", import.meta.url)),
+    command: "bunx --bun vite --mode test --host 127.0.0.1 --port 5199 --strictPort",
+    cwd: fileURLToPath(new URL("../../apps/website", import.meta.url)),
     url: "http://127.0.0.1:5199",
     reuseExistingServer: false,
   },

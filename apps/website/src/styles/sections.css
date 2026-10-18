@@ -1,0 +1,241 @@
+.details-section {
+  padding-block: 88px 76px;
+}
+.details-intro {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 80px;
+  align-items: end;
+}
+h2 {
+  font-size: clamp(34px, 3.4vw, 46px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+.details-intro > p {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 39ch;
+}
+.feature-lines {
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 40px;
+}
+.feature-lines article {
+  border-top: 1px solid var(--line);
+  padding-top: 21px;
+}
+.feature-lines h3 {
+  font-size: 17px;
+  font-weight: 550;
+  letter-spacing: -0.02em;
+}
+.feature-lines p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--muted);
+  margin-top: 12px;
+  max-width: 38ch;
+}
+.install-section {
+  padding-block: 70px;
+  border-block: 1px solid var(--line);
+  background: #f0f3e8;
+}
+.install-layout {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 96px;
+  align-items: center;
+}
+.install-copy > p {
+  margin-top: 21px;
+  font-size: 15px;
+  line-height: 1.85;
+  color: var(--muted);
+  max-width: 34ch;
+}
+.install-copy .release-note {
+  font-size: 12px;
+}
+.text-link {
+  display: inline-flex;
+  gap: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 25px;
+}
+.text-link svg {
+  width: 16px;
+  height: 16px;
+}
+.install-code {
+  min-width: 0;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.code-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 48px;
+  padding: 13px 22px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.code-label button {
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  font-size: 11px;
+  padding: 3px 0;
+  min-width: 40px;
+  text-align: right;
+}
+.install-code pre {
+  margin: 0;
+  padding: 2px 22px 23px;
+  font-size: 12px;
+  line-height: 1.9;
+  overflow-x: auto;
+  scrollbar-color: #b7c19b transparent;
+}
+.install-code code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+.config-label {
+  border-top: 1px solid var(--line);
+}
+.syntax-muted {
+  color: #667454;
+}
+.syntax-string {
+  color: #536b15;
+}
+.code-footnote {
+  font-size: 10px;
+  line-height: 1.7;
+  padding: 14px 22px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+.closing-section {
+  padding-block: 80px;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+.closing-section > img {
+  width: 56px;
+  height: 56px;
+}
+.closing-section h2 {
+  margin-top: 24px;
+  font-size: clamp(30px, 3vw, 42px);
+}
+.closing-section .primary-link {
+  margin-top: 30px;
+}
+.site-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  min-height: 100px;
+  border-top: 1px solid var(--line);
+  padding-block: 24px;
+}
+.site-footer .wordmark {
+  font-size: 26px;
+}
+.site-footer p,
+.site-footer > div {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.site-footer > div {
+  display: flex;
+  gap: 22px;
+}
+@media (max-width: 1000px) {
+  .details-intro {
+    gap: 50px;
+  }
+  .feature-lines {
+    gap: 28px;
+  }
+  .install-layout {
+    gap: 50px;
+  }
+}
+@media (max-width: 700px) {
+  .details-section {
+    padding-block: 52px;
+  }
+  .details-intro {
+    display: block;
+  }
+  .details-intro > p {
+    margin-top: 22px;
+    font-size: 14px;
+  }
+  .feature-lines {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    margin-top: 32px;
+  }
+  .feature-lines article {
+    padding-top: 17px;
+  }
+  .feature-lines p {
+    max-width: 50ch;
+    margin-top: 9px;
+  }
+  .install-section {
+    padding-block: 44px;
+  }
+  .install-layout {
+    display: block;
+  }
+  .install-copy > p {
+    max-width: 45ch;
+    font-size: 14px;
+  }
+  .install-code {
+    margin-top: 30px;
+  }
+  .install-code pre {
+    font-size: 10px;
+    padding-inline: 16px;
+  }
+  .code-label,
+  .code-footnote {
+    padding-inline: 16px;
+  }
+  .closing-section {
+    padding-block: 50px;
+  }
+  .closing-section h2 {
+    font-size: 30px;
+  }
+  .site-footer {
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-block: 28px;
+  }
+  .site-footer p {
+    flex: 1;
+    text-align: right;
+  }
+  .site-footer > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

@@ -9,6 +9,8 @@ dist/
 coverage/
 playwright-report/
 test-results/
+.wrangler/
+apps/website/.impeccable/review/
 .env
 .env.*
 !.env.example
