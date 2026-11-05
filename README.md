@@ -14,7 +14,7 @@ screenshots. Local development with the default plugin still needs no backend se
 
 ## Run locally
 
-The workspace pins Node.js **24.21.0**, Bun **1.4.2**, and Moon **2.5.4** in
+The workspace pins Node.js **26.13.0 (LTS)**, Bun **1.4.2**, and Moon **2.5.4** in
 `.prototools`. Install [proto](https://moonrepo.dev/docs/proto/install) **0.62.3**
 and [Cocogitto](https://docs.cocogitto.io/guide/installation.html) **6.5.0+**.
 Moon is also a locked development dependency; `bun moon` runs that local binary.

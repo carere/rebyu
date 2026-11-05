@@ -136,6 +136,12 @@ jobs:
         with:
           auto-install: true
           cache: false
+      - name: Select current Node.js LTS and its bundled npm
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: lts/*
+          check-latest: true
+          package-manager-cache: false
       - name: Verify npm and OIDC publishing prerequisites
         run: |
           bun run - <<'TS'
@@ -149,7 +155,7 @@ jobs:
             requestToken: Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN),
           };
           console.log(JSON.stringify(identity));
-          if (major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1))))
+          if (!Number.isInteger(major) || major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1))))
             throw new Error("npm 11.5.1 or newer is required for trusted publishing");
           if (!identity.githubActions || !identity.requestUrl || !identity.requestToken)
             throw new Error("GitHub did not provide the id-token: write credentials");

@@ -18,9 +18,13 @@ Pushing ordinary changes to `main` runs CI without releasing.
 Before publishing, the workflow verifies that the release commit belongs to `main`
 and its package version matches the tag. It runs static checks, builds, unit,
 integration, and browser tests, then previews the package and publishes it to the
-public npm registry. The pinned Node toolchain includes npm 11.5.1 or later,
-as required by [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
-Publishing uses GitHub OIDC (`id-token: write`); no `NPM_TOKEN` secret is needed.
+public npm registry. The publishing job uses the latest stable
+`actions/setup-node` to select current Node.js LTS (`lts/*`) and its bundled npm.
+The action places those executables first on PATH; the publishing preflight checks
+that npm meets the 11.5.1 minimum for
+[npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) and that GitHub
+provided OIDC credentials. Publishing uses GitHub OIDC (`id-token: write`); no
+`NPM_TOKEN` secret is needed.
 npm automatically adds provenance when trusted publishing from a public repository.
 
 ## First publish under the scoped name
