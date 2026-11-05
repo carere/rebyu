@@ -6,6 +6,12 @@ Visual UI reviews for Vite. Select an element, draw a rectangle, or sketch on th
 
 This is an initial working implementation, not full SitePing feature parity. See [the parity roadmap](docs/siteping-parity.md).
 
+Rebyu also provides a **self-hosted review backend**: users deploy the service and
+choose review and screenshot storage through ports and adapters. No managed Rebyu
+service or account is required. Start with [the self-hosting guide](docs/self-hosting.md)
+for the Node service, authenticated agent access, custom databases, and S3-compatible
+screenshots. Local development with the default plugin still needs no backend setup.
+
 ## Run locally
 
 The workspace pins Node.js **24.21.0**, Bun **1.4.2**, and Moon **2.5.4** in
@@ -149,7 +155,13 @@ export default defineConfig({
 });
 ```
 
-This plugin uses Vite's `configureServer` and `transformIndexHtml` hooks. It runs in `vite dev`, is excluded from production builds and `vite preview`, and respects Vite's base path. Standard Vite HTML entry projects work without framework adapters. SSR frameworks with custom HTML pipelines may need an explicit injection integration; that is not implemented yet.
+By default this plugin runs only in `vite dev`, is excluded from production builds
+and `vite preview`, and respects Vite's base path. Standard Vite HTML entry projects
+work without framework adapters. To connect a separately deployed backend, configure
+`endpoint` and a stable `projectId`. Explicit `production: true` also includes the
+widget in builds; it requires a hosted endpoint and never embeds a local review API.
+See [self-hosting](docs/self-hosting.md) for authenticated proxy setup and direct
+widget mounting. SSR-specific injection adapters are not implemented yet.
 
 ## Review flow
 
@@ -189,9 +201,10 @@ The name fills **Your name** in new comments and replies. A stable user ID is sa
 with each submission, so changing a display name keeps the same participation.
 Call `setUser` on every page load or authentication change; identities are held in
 memory. Without an identity, reviewers can still enter a name manually. Signing
-out clears the name. Use optional chaining because the API is absent in production
-and when the plugin is disabled. IDs must be 1–200 characters; names 1–80 characters.
-This API attributes comments; it does not authenticate users or enforce access.
+out clears the name. Use optional chaining because the API is absent when the
+widget is not included or the plugin is disabled. IDs must be 1–200 characters;
+names 1–80 characters. This browser API does not authenticate users or enforce
+access. The hosted backend replaces submitted authors with its verified identity.
 
 The trigger’s red pill counts **unread replies by other people** across all pages
 in conversations you started or joined by replying. Replies posted before you
@@ -209,11 +222,22 @@ for matching, so namesakes on legacy comments cannot be distinguished.
 | -------------------- | ------------------------ | ------------------------------------------------------------------------- |
 | `projectName`        | Vite root directory name | Label in the drawer                                                       |
 | `storageFile`        | `.rebyu/reviews.json`    | Storage path relative to the Vite root                                    |
+| `endpoint`           | Local development API   | Same-origin hosted review API path; requires `projectId`                  |
+| `projectId`          | Hash of local file path | Stable browser-storage namespace; include project and environment for hosted reviews |
+| `production`         | `false`                 | Opt in to build-time widget injection; requires a hosted endpoint          |
 | `open`               | `false`                  | Open the drawer on load                                                   |
 | `captureDiagnostics` | `false`                  | Record the last 20 uncaught errors / rejected promises after widget mount |
+| `initialPinsVisible` | `true`                   | Show existing annotation pins on initial load |
+| `enableScreenshot` | `true`                    | Offer opt-in screenshot capture in the composer |
+| `pageScope` | `"path-and-query"`                | Use pathname plus query, or `"path"` to exclude queries from page identity |
 | `enabled`            | `true`                   | Disable all plugin behavior with `false`                                  |
 
-Use a single running Vite server for each storage file. Writes are serialized within that server, saved through an atomic rename, and validated before persistence. UUIDs make creation and replies idempotent. Pin numbers are monotonically assigned and never reused after deletion. Keep `.rebyu/` in your application's `.gitignore`.
+For the default local-development API, use a single running Vite server for each
+storage file. Writes are serialized within that server, saved through an atomic
+rename, and validated before persistence. UUIDs make creation and replies idempotent.
+Pin numbers are monotonically assigned and never reused after deletion. Keep
+`.rebyu/` in your application's `.gitignore`. Hosted storage is configured separately
+in the backend, never through Vite's public widget options.
 
 Failed new-comment submissions stay in a browser localStorage outbox, namespaced by a stable project identifier. They retry on connection recovery, every 10 seconds, and via Retry sync. Replies and status changes report failures for manual retry. Browser storage must be available for new comments; quota failures leave the form intact.
 
@@ -227,7 +251,13 @@ Screenshots are opt-in viewport PNGs rendered from the DOM with `html-to-image`;
 </div>
 ```
 
-The API is intended for a trusted development server. Reviewer names are self-declared, and anyone with access to that server can read, reply to, resolve, or delete reviews. It has no production authentication. Cross-origin browser requests are rejected; mutations require JSON; raw storage-file requests are blocked by Vite. Do not expose it as a public feedback service.
+The default local API is intended for a trusted development server. Reviewer names
+are self-declared, and anyone with access can read, reply to, resolve, or delete
+reviews. It has no production authentication. Cross-origin browser requests are
+rejected; mutations require JSON; raw storage-file requests are blocked by Vite.
+Do not expose this local API as a public feedback service. The separately deployed
+backend requires authentication and scope/permission checks; screenshot payloads
+are rejected unless screenshot storage is configured. See [self-hosting](docs/self-hosting.md).
 
 ## Workspace
 
@@ -235,7 +265,7 @@ The Bun `apps/*` / `packages/*` workspace layout, Moon tasks, Biome rules, Git h
 unused-code checks, and agent conventions are adapted from Delimoov at `cf8c799`.
 The review domain is shared by both projects; package count does not imply separate domains.
 
-- `packages/vite-plugin-rebyu`: Node plugin, file store, contracts, and isolated SolidJS widget.
+- `packages/vite-plugin-rebyu`: Vite integration, isolated widget, runtime-neutral review backend, Node service, and storage adapters.
 - `apps/website`: the public website, disposable review demo, and development host.
 - `docs/siteping-parity.md`: implemented scope, limitations, and next milestones.
 

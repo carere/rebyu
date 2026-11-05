@@ -32,19 +32,17 @@ tasks:
     outputs:
       - dist/client
   build:
-    command: tsup src/index.ts src/client-api.ts --format esm --dts --external vite --out-dir dist
+    command: tsup --config tsup.config.ts
     deps:
       - ~:build-client
     inputs:
       - src/**/*
       - vite.client.config.ts
+      - tsup.config.ts
       - /tsconfig.json
     outputs:
-      - dist/index.js
-      - dist/index.d.ts
-      - dist/client-api.js
-      - dist/client-api.d.ts
-      - dist/chunk-*.js
+      - dist/*.js
+      - dist/*.d.ts
   test-unit:
     command: vitest run tests/unit
     deps:

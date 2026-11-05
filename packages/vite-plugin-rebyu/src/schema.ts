@@ -68,4 +68,10 @@ export interface ClientConfig {
   clientUrl: string;
   open: boolean;
   captureDiagnostics: boolean;
+  initialPinsVisible: boolean;
+  enableScreenshot: boolean;
+  pageScope: "path" | "path-and-query";
+  onError?: (error: unknown) => void;
 }
+export type WidgetOptions = Pick<ClientConfig, "projectId" | "endpoint"> &
+  Partial<Omit<ClientConfig, "projectId" | "endpoint">>;

@@ -43,7 +43,7 @@ function createReviewModel(props: {
   const [error, setError] = createSignal(""),
     [busy, setBusy] = createSignal(false),
     [pending, setPending] = createSignal(0),
-    [pins, setPins] = createSignal(true),
+    [pins, setPins] = createSignal(props.config.initialPinsVisible),
     [capture, setCapture] = createSignal(false);
   const { colorMode, toggleColorMode } = useColorMode();
   const dark = () => colorMode() === "dark";
@@ -136,7 +136,7 @@ function createReviewModel(props: {
     try {
       if (!user()) localStorage.setItem("rebyu:author", author().trim());
       let screenshot: string | undefined;
-      if (capture()) {
+      if (props.config.enableScreenshot && capture()) {
         const { toPng } = await import("html-to-image");
         screenshot = await toPng(document.body, {
           width: innerWidth,

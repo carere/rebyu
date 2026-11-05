@@ -16,6 +16,11 @@ one review. Its anchor connects the geometry to the page's DOM.
 **Page**: A review location identified by pathname and query string. Hash fragments
 are excluded from identity; review navigation uses a temporary reserved hash.
 
+**Project**: An application or website surface whose reviews belong together.
+
+**Environment**: A named review scope within a project, such as staging or a pull
+request preview. Reviews and pin numbers belong to one project and environment.
+
 **Review drawer**: The right-side panel containing the inbox, composer, and conversation.
 
 **Unresolved**: Reviews with Open or In progress status. Resolved and Dismissed are

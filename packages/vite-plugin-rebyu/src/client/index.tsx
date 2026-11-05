@@ -1,14 +1,26 @@
 import { createEffect, createSignal, onCleanup } from "solid-js";
 import { render } from "solid-js/web";
 import { getTextDirection } from "#i18n/runtime";
-import type { ClientConfig } from "../schema";
+import { installClientApi } from "../client-api";
+import type { ClientConfig, WidgetOptions } from "../schema";
 import { App } from "./App";
 import { HOST_ID } from "./anchors";
 import { ColorModeProvider, getClientColorMode } from "./components/color-mode";
 import { initializeLocale, locale } from "./localization";
 import styles from "./styles.css?inline";
-export function mount(config: ClientConfig) {
+export function mount(options: WidgetOptions) {
   if (document.getElementById(HOST_ID)) return;
+  installClientApi();
+  const config: ClientConfig = {
+    projectName: options.projectId,
+    clientUrl: "",
+    open: false,
+    captureDiagnostics: false,
+    initialPinsVisible: true,
+    enableScreenshot: true,
+    pageScope: "path-and-query",
+    ...options,
+  };
   const host = document.createElement("div");
   host.id = HOST_ID;
   host.style.cssText = "all:initial;position:fixed;inset:0;pointer-events:none;z-index:2147483646;";
@@ -37,8 +49,9 @@ export function mount(config: ClientConfig) {
       container.lang = locale();
       container.dir = getTextDirection(locale());
     });
-    const [page, setPage] = createSignal(location.pathname + location.search);
-    const interval = window.setInterval(() => setPage(location.pathname + location.search), 300);
+    const pagePath = () => location.pathname + (config.pageScope === "path" ? "" : location.search);
+    const [page, setPage] = createSignal(pagePath());
+    const interval = window.setInterval(() => setPage(pagePath()), 300);
     onCleanup(() => clearInterval(interval));
     return (
       <ColorModeProvider initialColorMode={getClientColorMode()} target={container}>
