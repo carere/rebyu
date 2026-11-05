@@ -1,6 +1,12 @@
 name: Release to npm
 on:
   workflow_dispatch:
+    inputs:
+      retry_tag:
+        description: Existing version tag to retry without preparing a new release
+        required: false
+        type: string
+        default: ""
   pull_request:
     branches: [main]
     types: [closed]
@@ -33,10 +39,19 @@ jobs:
         run: |
           echo "Select main when running the release workflow."
           exit 1
+      - name: Validate an existing release retry
+        if: github.event_name == 'workflow_dispatch' && inputs.retry_tag != ''
+        env:
+          RETRY_TAG: ${{ inputs.retry_tag }}
+        run: |
+          if ! [[ "$RETRY_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Select an existing vMAJOR.MINOR.PATCH release tag." >&2
+            exit 1
+          fi
       - name: Check out main, the merged release, or the pushed tag
         uses: actions/checkout@v7.0.1
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.event.pull_request.merge_commit_sha || github.ref }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && (inputs.retry_tag || 'main') || github.event.pull_request.merge_commit_sha || github.ref }}
           fetch-depth: 0
       - name: Install the pinned toolchain
         uses: moonrepo/setup-toolchain@261c62cb5b0f580c7be7c8cd0f023a2e96756095 # v0.6.4
@@ -45,7 +60,7 @@ jobs:
           cache: false
       - name: Require the first local release to exist and prevent duplicate release PRs
         id: baseline
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.retry_tag == ''
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -60,13 +75,13 @@ jobs:
           fi
           printf 'commit=%s\n' "$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Bump the version and generate the changelog with Cocogitto
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.retry_tag == ''
         uses: cocogitto/cocogitto-action@v4.1.0
         with:
           command: bump
           args: --auto
       - name: Open the release pull request
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.retry_tag == ''
         env:
           GH_TOKEN: ${{ github.token }}
           ORIGINAL_COMMIT: ${{ steps.baseline.outputs.commit }}
@@ -84,13 +99,16 @@ jobs:
           gh pr create --base main --head "$release_branch" --title "chore(release): $release_tag" --body-file "$RUNNER_TEMP/release-pr.md" >> "$GITHUB_STEP_SUMMARY"
       - name: Record the exact version and commit to publish
         id: release
-        if: github.event_name != 'workflow_dispatch'
+        if: github.event_name != 'workflow_dispatch' || inputs.retry_tag != ''
         env:
           EVENT_NAME: ${{ github.event_name }}
+          RETRY_TAG: ${{ inputs.retry_tag }}
           PUSHED_TAG: ${{ github.ref_name }}
           RELEASE_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
-          if [ "$EVENT_NAME" = pull_request ]; then
+          if [ "$EVENT_NAME" = workflow_dispatch ]; then
+            release_tag="$RETRY_TAG"
+          elif [ "$EVENT_NAME" = pull_request ]; then
             release_tag="${RELEASE_BRANCH#release/}"
           else
             release_tag="$PUSHED_TAG"
@@ -118,6 +136,24 @@ jobs:
         with:
           auto-install: true
           cache: false
+      - name: Verify npm and OIDC publishing prerequisites
+        run: |
+          bun run - <<'TS'
+          import { execFileSync } from "node:child_process";
+          const npm = execFileSync("npm", ["--version"], { encoding: "utf8" }).trim();
+          const [major, minor, patch] = npm.split(".").map(Number);
+          const identity = {
+            event: "npm.publish_identity", node: execFileSync("node", ["--version"], { encoding: "utf8" }).trim(), npm,
+            githubActions: process.env.GITHUB_ACTIONS === "true",
+            requestUrl: Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_URL),
+            requestToken: Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN),
+          };
+          console.log(JSON.stringify(identity));
+          if (major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1))))
+            throw new Error("npm 11.5.1 or newer is required for trusted publishing");
+          if (!identity.githubActions || !identity.requestUrl || !identity.requestToken)
+            throw new Error("GitHub did not provide the id-token: write credentials");
+          TS
       - name: Validate the tag and check npm publication status
         id: release
         env:
@@ -160,4 +196,20 @@ jobs:
       - name: Publish with npm trusted publishing
         if: steps.release.outputs.publish == 'true'
         working-directory: packages/vite-plugin-rebyu
-        run: npm publish --access public
+        run: |
+          if npm publish --access public --loglevel=verbose > "$RUNNER_TEMP/npm-publish.log" 2>&1; then
+            echo "Published the verified npm package."
+            exit 0
+          fi
+          bun run - <<'TS'
+          import { readFileSync } from "node:fs";
+          const log = readFileSync(`${process.env.RUNNER_TEMP}/npm-publish.log`, "utf8");
+          for (const line of log.split("\n")) {
+            if (!/npm (?:verbose oidc|error|info using)/.test(line)) continue;
+            console.error(line
+              .replace(/eyJ[\w-]+\.eyJ[\w-]+\.[\w-]+/g, "<REDACTED>")
+              .replace(/(?:npm_|gh[opsu]_)[\w]+/g, "<REDACTED>")
+              .replace(/Bearer\s+\S+/gi, "Bearer <REDACTED>"));
+          }
+          TS
+          exit 1
