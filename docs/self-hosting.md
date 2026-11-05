@@ -12,7 +12,7 @@ Deleting a preview must not delete the service or its persistent storage.
 ## Run a Node service
 
 Install `@carere/rebyu` in your service project. For unpublished changes, build and
-install a tarball using the root README's packaging instructions. Use Node 24 for
+install a tarball using the root README's packaging instructions. Use Node LTS for
 the TypeScript configuration below. The CLI also accepts an explicit `.mjs` file.
 
 Create `rebyu.config.ts` in the service project:

@@ -123,8 +123,6 @@ jobs:
     permissions:
       contents: write
       id-token: write
-    env:
-      PUBLISH_NPM_VERSION: "11.19.0"
     steps:
       - name: Check out the release and full history
         uses: actions/checkout@v7.0.1
@@ -138,13 +136,17 @@ jobs:
         with:
           auto-install: true
           cache: false
-      - name: Install the publishing npm version
-        run: proto install npm "$PUBLISH_NPM_VERSION"
+      - name: Select current Node.js LTS and its bundled npm
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: lts/*
+          check-latest: true
+          package-manager-cache: false
       - name: Verify npm and OIDC publishing prerequisites
         run: |
           bun run - <<'TS'
           import { execFileSync } from "node:child_process";
-          const npm = execFileSync("proto", ["exec", `npm@${process.env.PUBLISH_NPM_VERSION}`, "--", "npm", "--version"], { encoding: "utf8" }).trim().split(/\r?\n/).at(-1) ?? "";
+          const npm = execFileSync("npm", ["--version"], { encoding: "utf8" }).trim();
           const [major, minor, patch] = npm.split(".").map(Number);
           const identity = {
             event: "npm.publish_identity", node: execFileSync("node", ["--version"], { encoding: "utf8" }).trim(), npm,
@@ -196,12 +198,12 @@ jobs:
         run: git diff --exit-code
       - name: Preview the npm package contents
         working-directory: packages/vite-plugin-rebyu
-        run: proto exec "npm@$PUBLISH_NPM_VERSION" -- npm pack --dry-run
+        run: npm pack --dry-run
       - name: Publish with npm trusted publishing
         if: steps.release.outputs.publish == 'true'
         working-directory: packages/vite-plugin-rebyu
         run: |
-          if proto exec "npm@$PUBLISH_NPM_VERSION" -- npm publish --access public --loglevel=verbose > "$RUNNER_TEMP/npm-publish.log" 2>&1; then
+          if npm publish --access public --loglevel=verbose > "$RUNNER_TEMP/npm-publish.log" 2>&1; then
             echo "Published the verified npm package."
             exit 0
           fi
