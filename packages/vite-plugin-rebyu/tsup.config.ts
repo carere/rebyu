@@ -18,5 +18,5 @@ export default defineConfig({
   external: ["vite"],
   outDir: "dist",
   // Keep the separately built client, while removing stale server chunks/types before packing.
-  clean: ["dist/*.js", "dist/*.d.ts"],
+  clean: ["!client/**"],
 });
