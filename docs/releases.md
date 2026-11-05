@@ -131,6 +131,11 @@ concurrency group.
 If the merged release's publishing run fails, fix external prerequisites and
 choose **Re-run failed jobs** on that run. The successful preparation job's outputs
 are reused, so publishing retries the same commit and tag without bumping again.
+If the workflow itself needs a fix, merge that fix, then manually run **Release to
+npm** on `main` with `retry_tag` set to the existing tag (for example `v0.2.0`).
+This uses the updated workflow to verify/publish the original release commit,
+without preparing another version or moving the existing tag. The job checks npm's
+version and OIDC availability early, and reports sanitized exchange failures.
 An already published version still passes through verification but skips the npm
 publish command.
 
