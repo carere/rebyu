@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.0](https://github.com/carere/rebyu/compare/7112d6dd8d6e2d84aa88a3ee11f953ebaba88a76..v0.2.0) - 2026-11-05
+#### Features
+- (**review**) add self-hosted storage and D1 integration (#6) - ([32ddda6](https://github.com/carere/rebyu/commit/32ddda61059dd67a5c1d40a6bf549114bfea8e01)) - Kevin Abatan
+#### Bug Fixes
+- (**website**) allow Cloudflare deployment task in CI (#5) - ([9af529c](https://github.com/carere/rebyu/commit/9af529c8cd9813463be81883b7236baad8c28861)) - Kevin Abatan
+- scope npm package as @carere/rebyu (#4) - ([7112d6d](https://github.com/carere/rebyu/commit/7112d6dd8d6e2d84aa88a3ee11f953ebaba88a76)) - Kevin Abatan
+
+- - -
+
 ## [v0.1.0](https://github.com/carere/rebyu/compare/3593f32e2208866d572d6211b1a1efd2ca1f9a0f..v0.1.0) - 2026-10-18
 #### Features
 - launch website and automate npm releases (#2) - ([fe5fe36](https://github.com/carere/rebyu/commit/fe5fe360add4c7dafdd3f0f6472a6a0e796b51f3)) - Kevin Abatan

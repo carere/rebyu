@@ -28,7 +28,7 @@
     },
     "packages/vite-plugin-rebyu": {
       "name": "@carere/rebyu",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "bin": {
         "rebyu": "./dist/cli.js",
       },
