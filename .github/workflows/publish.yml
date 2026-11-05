@@ -123,6 +123,8 @@ jobs:
     permissions:
       contents: write
       id-token: write
+    env:
+      PUBLISH_NPM_VERSION: "11.19.0"
     steps:
       - name: Check out the release and full history
         uses: actions/checkout@v7.0.1
@@ -136,11 +138,13 @@ jobs:
         with:
           auto-install: true
           cache: false
+      - name: Install the publishing npm version
+        run: proto install npm "$PUBLISH_NPM_VERSION"
       - name: Verify npm and OIDC publishing prerequisites
         run: |
           bun run - <<'TS'
           import { execFileSync } from "node:child_process";
-          const npm = execFileSync("npm", ["--version"], { encoding: "utf8" }).trim();
+          const npm = execFileSync("proto", ["exec", `npm@${process.env.PUBLISH_NPM_VERSION}`, "--", "npm", "--version"], { encoding: "utf8" }).trim().split(/\r?\n/).at(-1) ?? "";
           const [major, minor, patch] = npm.split(".").map(Number);
           const identity = {
             event: "npm.publish_identity", node: execFileSync("node", ["--version"], { encoding: "utf8" }).trim(), npm,
@@ -149,7 +153,7 @@ jobs:
             requestToken: Boolean(process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN),
           };
           console.log(JSON.stringify(identity));
-          if (major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1))))
+          if (!Number.isInteger(major) || major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1))))
             throw new Error("npm 11.5.1 or newer is required for trusted publishing");
           if (!identity.githubActions || !identity.requestUrl || !identity.requestToken)
             throw new Error("GitHub did not provide the id-token: write credentials");
@@ -192,12 +196,12 @@ jobs:
         run: git diff --exit-code
       - name: Preview the npm package contents
         working-directory: packages/vite-plugin-rebyu
-        run: npm pack --dry-run
+        run: proto exec "npm@$PUBLISH_NPM_VERSION" -- npm pack --dry-run
       - name: Publish with npm trusted publishing
         if: steps.release.outputs.publish == 'true'
         working-directory: packages/vite-plugin-rebyu
         run: |
-          if npm publish --access public --loglevel=verbose > "$RUNNER_TEMP/npm-publish.log" 2>&1; then
+          if proto exec "npm@$PUBLISH_NPM_VERSION" -- npm publish --access public --loglevel=verbose > "$RUNNER_TEMP/npm-publish.log" 2>&1; then
             echo "Published the verified npm package."
             exit 0
           fi
