@@ -59,7 +59,7 @@ Options: `projectName`, `storageFile`, `endpoint`, `projectId`, `production` (fa
 The default local API is only for trusted development servers: it accepts
 self-declared reviewer names and has no authentication. The independently deployed
 backend requires authenticated project/environment scope and permissions. Postgres
-and D1 adapters, claim leases, and SitePing migrations are not bundled yet. Full
+binding adapters beyond D1, claim leases, and SitePing migrations are not bundled yet. Full
 setup, limitations, and the parity roadmap are in the [repository](https://github.com/carere/rebyu).
 
 MIT · Kevin Abatan. Vendored Zaidan sources retain their MIT notices in THIRD_PARTY_LICENSES.md.
