@@ -3,7 +3,8 @@ import { dirname } from "node:path";
 import { z } from "zod";
 import { createSchema, type NewReview, patchSchema, type Review } from "./schema";
 
-const storedSchema = createSchema.extend({
+const recordSchema = createSchema.extend({ screenshotKey: z.uuid().optional() });
+const storedSchema = recordSchema.extend({
   number: z.number().int().positive(),
   status: z.enum(["open", "in-progress", "resolved", "dismissed"]),
   createdAt: z.iso.datetime(),
@@ -54,12 +55,12 @@ export class ReviewStore {
     this.queue = task.catch(() => {});
     return task;
   }
-  create(input: NewReview) {
-    const data = createSchema.parse(input);
+  create(input: NewReview & { screenshotKey?: string }) {
+    const data = recordSchema.parse(input);
     return this.mutate((reviews, document) => {
       const existing = reviews.find((r) => r.id === data.id);
       if (existing) return existing;
-      const review: Review = {
+      const review: Review & { screenshotKey?: string } = {
         ...data,
         number: document.nextNumber++,
         status: "open",

@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { build, createServer, type ViteDevServer } from "vite";
@@ -30,7 +30,7 @@ function fixture(): NewReview {
 }
 let server: ViteDevServer, dir: string, url: string;
 beforeAll(async () => {
-  dir = await mkdtemp(join(tmpdir(), "rebyu-vite-"));
+  dir = await realpath(await mkdtemp(join(tmpdir(), "rebyu-vite-")));
   await writeFile(join(dir, "index.html"), "<html><head></head><body><h1>Hello</h1></body></html>");
   server = await createServer({
     configFile: false,

@@ -85,10 +85,12 @@ export function ReviewComposer(input: { model: ReviewModel }) {
               </SelectTrigger>
               <SelectContent portalMount={props.portalMount} />
             </Select>
-            <div class="checkbox-row">
-              <Checkbox id="rebyu-capture" checked={capture()} onChange={setCapture} />
-              <Label for="rebyu-capture">{m.review_attach_screenshot()}</Label>
-            </div>
+            <Show when={props.config.enableScreenshot}>
+              <div class="checkbox-row">
+                <Checkbox id="rebyu-capture" checked={capture()} onChange={setCapture} />
+                <Label for="rebyu-capture">{m.review_attach_screenshot()}</Label>
+              </div>
+            </Show>
             <div class="composer-actions">
               <Button type="submit" disabled={busy()}>
                 {busy() ? m.review_saving() : m.review_post_comment()}

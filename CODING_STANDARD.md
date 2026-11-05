@@ -8,11 +8,16 @@ Adapted from Delimoov at `cf8c799826882c7030f1c0aecef0e26a28200f93`.
   Generated JavaScript is a build artifact, not source. Moon and GitHub Actions use YAML.
 - Rebyu has one review domain; read `docs/context/root.md` for its vocabulary.
   Keep domain boundaries inside projects; do not create packages for each concept.
-- The plugin owns its HTTP API, persistence, annotation behavior, and isolated widget.
+- The package owns its review backend, storage ports/adapters, Vite integration,
+  annotation behavior, and isolated widget. The hosted handler must remain free of
+  Node/Vite runtime dependencies; put runtime-specific behavior in adapters.
   The website is a consumer and demonstration surface, not production plugin logic.
 - Current small-project layout: Node integration lives in the plugin's `src/`, the
   widget in `src/client/`, and vendored Zaidan primitives in `src/client/components/ui/`.
   Keep rendering, browser event handling, HTTP routing, and persistence in separate modules.
+  Hosted review behavior lives under `src/contexts/review/`; its HTTP routes live
+  under `src/routes/`. Derive hosted identity/scope from verified authentication,
+  not client-provided metadata. Configure storage credentials only on the server.
 - As domain behavior grows, organize it under `src/contexts/review/<concept>` and put
   genuinely shared technical code under `src/contexts/shared/<concept>`. Keep styles,
   route entry points, and localization outside context folders. Move related files
@@ -40,7 +45,8 @@ Adapted from Delimoov at `cf8c799826882c7030f1c0aecef0e26a28200f93`.
 - Keep effects and event listeners scoped to the owning component and clean them up.
   Use visible loading/error states. A failed submission must not silently lose a comment.
 - Keep styles and portals inside the ShadowRoot. Host applications must not need SolidJS,
-  Tailwind, or Zaidan configuration. Production builds exclude the development widget.
+  Tailwind, or Zaidan configuration. Production builds exclude the widget by default;
+  hosted injection requires explicit opt-in and must never include server secrets.
 - Name buttons and inputs accessibly, specify button types, support keyboard interaction,
   and respect reduced motion. Use the T3 collaborative browser when available; write
   Playwright tests for critical UI flows as browser automation coverage grows.

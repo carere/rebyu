@@ -48,7 +48,7 @@ async function route(
   req: IncomingMessage,
   res: ServerResponse,
   config: ClientConfig,
-  store: ReviewStore,
+  store: ReviewStore | undefined,
   path: string,
 ) {
   // Browser callers must be same-origin; JSON-only mutations also reject form CSRF.
@@ -62,6 +62,7 @@ async function route(
     res.end(source);
     return;
   }
+  if (!store) return json(res, 404, { error: "Not found" });
   if (path === config.endpoint) return collection(req, res, store);
   const id = path.startsWith(`${config.endpoint}/`) ? path.slice(config.endpoint.length + 1) : "";
   if (/^[a-f\d-]{36}$/i.test(id)) return item(req, res, store, id);
@@ -81,7 +82,7 @@ function failure(error: unknown, res: ServerResponse, logger: Logger) {
 }
 export function reviewMiddleware(
   config: ClientConfig,
-  store: ReviewStore,
+  store: ReviewStore | undefined,
   logger: Logger,
 ): Connect.NextHandleFunction {
   const prefix = config.clientUrl.slice(0, config.clientUrl.lastIndexOf("/") + 1);

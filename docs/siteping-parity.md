@@ -10,6 +10,11 @@ Baseline researched on 2026-10-16 from [SitePing](https://siteping.dev/), its [r
 - CSS selector, XPath, and text fallback anchoring. Relative coordinates for drawn annotations; scroll, resize, DOM mutation, and body resize tracking.
 - Cross-page review inbox with All pages / This page scope, page-path search, author filter, categories, replies, and four statuses. Selecting a review navigates to its page and reopens the conversation.
 - File-backed shared comments; atomic writes, validation, serialized mutations, retry-safe creation and replies, durable new-comment outbox.
+- Self-hosted authenticated Web Request/Response backend, standalone Node service,
+  project/environment isolation, scoped agent permissions, configurable review and
+  screenshot ports, file and D1 review adapters, and S3-compatible private screenshot storage.
+- Explicit hosted Vite endpoints, opt-in build-time widget injection, and direct
+  framework-independent widget mounting. See [self-hosting](self-hosting.md).
 - Opt-in viewport screenshots excluding form controls and ignored subtrees. Optional uncaught error / rejected promise diagnostics.
 - Light/dark themes, responsive drawer, accessible names, keyboard element selection, inbox navigation shortcuts, and reduced-motion styles.
 - Three-page vanilla Vite website with eight optional seeded reviews, proving that the host application does not need SolidJS.
@@ -17,11 +22,18 @@ Baseline researched on 2026-10-16 from [SitePing](https://siteping.dev/), its [r
 ## Remaining before SitePing parity
 
 1. **Anchoring and capture fidelity**: structural fingerprints / confidence scoring for reordered repeated content, nested scroll containers and layout animation tracking, annotations redrawn on screenshot, selection-area crops, screenshot redaction previews, canvas / iframe behavior, and right-click quick comments.
-2. **Deployment and storage**: authenticated production server, Request/Response handler, permissions and email privacy, pluggable database stores, screenshot object storage, configurable retention and deletion, shared staging / production injection.
+2. **Deployment and storage**: bundled database adapters beyond files and D1, native edge
+   runtime deployment/binding adapters, provider-specific authentication examples,
+   rate limiting, pagination, automated retention/orphan reconciliation, and a
+   deliberate local/SitePing data migration. TLS, identity validation, and request
+   limits outside the handler remain operator responsibilities.
 3. **Triage and integrations**: shareable review-link controls, custom panel actions, Slack / Discord / generic webhooks, GitHub / GitLab issue synchronization, and notifications.
 4. **Reliability**: exponential backoff, queued replies and updates, explicit pending-comment cards, conflict handling, cross-tab outbox ownership, live push instead of 10-second polling, storage migrations and multi-process locking.
 5. **Customization and accessibility**: locale registration and the eight SitePing locales, automatic theme matching, position and accent options, complete keyboard drawing, touch / pen and screen-reader audits. No WCAG conformance claim is made.
 6. **Diagnostics**: opt-in console capture and failed HTTP request details with redaction controls. The current diagnostics only capture uncaught errors and rejected promises after initialization.
 7. **Distribution**: npm publishing and release automation, CLI scaffolding / diagnostics, CI framework matrix (React, Vue, Svelte, Solid, Astro), SSR injection adapters, lazy-loaded panel and capture chunks, and bundle budgets.
 
-The current package is a local development review tool. It does not yet replace SitePing's production service, persistence adapters, internationalization, or external integrations.
+The package supports both local development and a separately deployable self-hosted
+backend. It does not yet provide all SitePing workflows, storage adapters, deployment
+automation, or external integrations; Delimoov's agent claims, lifecycle controls,
+and resolution history still need explicit replacement work.

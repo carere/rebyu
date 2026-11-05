@@ -12,7 +12,7 @@ export function createApi(config: ClientConfig) {
   function write(items: NewReview[]) {
     localStorage.setItem(key, JSON.stringify(items));
   }
-  async function request(path = "", method = "GET", data?: unknown) {
+  async function fetchReview(path = "", method = "GET", data?: unknown) {
     const response = await fetch(`${config.endpoint}${path}`, {
       method,
       headers: { "Content-Type": "application/json" },
@@ -30,6 +30,7 @@ export function createApi(config: ClientConfig) {
         "Cross-origin requests are not allowed": m.review_error_cross_origin,
         "Method not allowed": m.review_error_method,
         "Could not save reviews. Check the Vite server log.": m.review_error_server,
+        "Could not process reviews. Check the Rebyu server log.": m.review_error_server,
       };
       throw new Error(
         knownErrors[error.error]?.() ??
@@ -38,6 +39,14 @@ export function createApi(config: ClientConfig) {
       );
     }
     return response.json();
+  }
+  async function request(path = "", method = "GET", data?: unknown) {
+    try {
+      return await fetchReview(path, method, data);
+    } catch (error) {
+      config.onError?.(error);
+      throw error;
+    }
   }
   return {
     list: (): Promise<Review[]> => request(),
