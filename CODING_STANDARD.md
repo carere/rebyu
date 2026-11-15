@@ -86,7 +86,7 @@ Adapted from Delimoov at `cf8c799826882c7030f1c0aecef0e26a28200f93`.
 - Use Conventional Commits for commits and PR titles. Lefthook sorts staged manifests,
   applies Biome fixes, and checks commit messages with Cocogitto. Never bypass hooks
   merely to make a change land.
-- Follow the installed `pr` skill for PR bodies and evidence. CI validates its template,
+- Follow the shared `pr` skill for PR bodies and evidence. CI validates the required sections,
   commit/title format, static checks, build outputs, and separate test tasks.
 - Keep tool versions, `.prototools`, `packageManager`, and `bun.lock` aligned. Do not copy
   another project's remote cache credentials, deployment setup, or environment secrets.

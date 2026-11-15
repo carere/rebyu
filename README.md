@@ -65,8 +65,9 @@ then validates its Conventional Commit message using `cog verify`.
 
 CI repeats the static checks, Moon builds, and separate unit, integration, and browser test tasks
 on pull requests and pushes to main. PR metadata checks Conventional Commits, titles,
-and the body template from `.agents/skills/pr/SKILL.md`. Its validator checks structure
-and placeholders, not the truth of evidence. UI PRs require video evidence per the
+and the Summary / Evidence / Merge Danger body structure in `scripts/pr-body.ts`,
+following the shared `pr` skill. Its validator checks structure and placeholders,
+not the truth of evidence. UI PRs require video evidence per the
 skill. All workflows use standard GitHub runners and the pinned proto setup action;
 there is no project-specific remote cache. The website uses Cloudflare Workers static assets;
 see [website hosting](docs/website-hosting.md). After the first local npm release, run
@@ -96,7 +97,7 @@ base border/outline rules. Launcher tooltips appear after a 200ms hover delay.
 
 Read [CODING_STANDARD.md](CODING_STANDARD.md) before contributing. Agent workflows
 and their Rebyu-specific configuration live in [AGENTS.md](AGENTS.md),
-[.agents/skills/README.md](.agents/skills/README.md), and `docs/agents/`.
+[Home's shared skills](https://github.com/carere/home), and `docs/agents/`.
 
 ## Translations
 
