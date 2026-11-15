@@ -13,9 +13,12 @@ of the host framework and mount its Zaidan portals inside the widget ShadowRoot.
 
 ## Agent skills
 
-Use the committed skills in `.agents/skills/`; see its README for provenance and
-upstream-update rules. `/ask-matt` routes to the engineering workflows. The
-`setup-matt-pocock-skills` repository configuration is already in place.
+Use the shared skills in [carere/home](https://github.com/carere/home), normally
+at `~/Projects/home/.agents/skills/`. Start the agent from Home to load them,
+then run Rebyu commands from this repository. Home's skill catalog records
+provenance and upstream-update rules. `/ask-matt` routes to the engineering workflows.
+Rebyu's tracker, triage and domain configuration remains in `docs/agents/`,
+with the adapted guidance's [Matt Pocock license](docs/agents/MATT-POCOCK-LICENSE).
 
 ### Issue tracker
 
@@ -35,8 +38,8 @@ Do not infer additional bounded contexts from the number of workspace projects.
 
 ## Pull requests
 
-Use Conventional Commit messages and PR titles. The committed `pr` skill defines
-Summary / Evidence / Merge Danger; CI reads its template directly. Include playable
-video evidence for UI behavior changes as specified by that skill. Do not publish
-issues, comments, releases, or deployments solely because a skill is installed;
+Use Conventional Commit messages and PR titles. The shared `pr` skill defines
+Summary / Evidence / Merge Danger; CI validates that structure in `scripts/pr-body.ts`.
+Include playable video evidence for UI behavior changes as specified by that skill.
+Do not publish issues, comments, releases, or deployments solely because a skill is installed;
 follow the user's authorized workflow.

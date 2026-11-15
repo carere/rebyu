@@ -22,15 +22,20 @@ const sections = (markdown: string): Section[] => {
   return result;
 };
 
-export const prTemplateFromSkill = (skill: string): string => {
-  const template = skill.match(/```markdown\r?\n([\s\S]*?)\r?\n```/)?.[1];
-  if (!template?.trim()) throw new Error("The PR skill must contain a Markdown template.");
-  return template;
-};
+// CI's structure and placeholder checks stay local; writing guidance lives in Home's pr skill.
+const expected = ["Summary", "Evidence", "Merge Danger"];
+const placeholders = [
+  "<diagram, diff-sketch, or tree>",
+  "<video/output/failing test run>",
+  "<video/output/passing test run>",
+  "<one-way or two-way>",
+  "<optional: description>",
+  "<one-word description>",
+  "<optional: potential ramifications of merge>",
+];
 
-export const validatePrBody = (body: string, template: string): string[] => {
+export const validatePrBody = (body: string): string[] => {
   const errors: string[] = [];
-  const expected = sections(template).map(({ heading }) => heading);
   const actual = sections(body);
   if (actual.map(({ heading }) => heading).join("\n") !== expected.join("\n")) {
     errors.push(`Use the template headings once each, in order: ${expected.join(", ")}.`);
@@ -40,7 +45,7 @@ export const validatePrBody = (body: string, template: string): string[] => {
   for (const { heading, content } of actual) {
     if (!content.trim()) errors.push(`Complete the ${heading} section.`);
   }
-  for (const placeholder of new Set(template.match(/<[^>\n]+>/g) ?? [])) {
+  for (const placeholder of placeholders) {
     if (body.includes(placeholder)) errors.push(`Replace the template placeholder ${placeholder}.`);
   }
   const risk = actual.find(({ heading }) => heading === "Merge Danger")?.content ?? "";
